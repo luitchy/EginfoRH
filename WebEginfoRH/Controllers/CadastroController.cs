@@ -23,6 +23,7 @@ namespace WebEginfoRH.Controllers
             {
                 //Data save to database
                 var RedirectUrl = Url.Action("Cadastro1");
+                var RedirectUrl1 = Url.Action("Cadastro1");
                 return Json(new { success = true, redirectUrl = RedirectUrl });
             }
             return Json(new
