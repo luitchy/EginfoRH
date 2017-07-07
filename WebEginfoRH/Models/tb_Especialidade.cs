@@ -12,26 +12,18 @@ namespace WebEginfoRH.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tb_Candidato
+    public partial class tb_Especialidade
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tb_Candidato()
+        public tb_Especialidade()
         {
-            this.tb_Especialidade = new HashSet<tb_Especialidade>();
+            this.tb_Candidato = new HashSet<tb_Candidato>();
         }
     
         public int id { get; set; }
         public string nome { get; set; }
-        public string cpf { get; set; }
-        public string telefone { get; set; }
-        public string celular { get; set; }
-        public string email { get; set; }
-        public string senha { get; set; }
-        public Nullable<int> idPerfil { get; set; }
-        public int idEndereco { get; set; }
-        public string curriculum { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tb_Especialidade> tb_Especialidade { get; set; }
+        public virtual ICollection<tb_Candidato> tb_Candidato { get; set; }
     }
 }

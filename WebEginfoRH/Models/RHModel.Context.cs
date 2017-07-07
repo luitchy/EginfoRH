@@ -13,10 +13,10 @@ namespace WebEginfoRH.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class CandidatoEntities : DbContext
+    public partial class EGINFO_RHContext : DbContext
     {
-        public CandidatoEntities()
-            : base("name=CandidatoEntities")
+        public EGINFO_RHContext()
+            : base("name=EGINFO_RHContext")
         {
         }
     
@@ -26,5 +26,6 @@ namespace WebEginfoRH.Models
         }
     
         public virtual DbSet<tb_Candidato> tb_Candidato { get; set; }
+        public virtual DbSet<tb_Especialidade> tb_Especialidade { get; set; }
     }
 }

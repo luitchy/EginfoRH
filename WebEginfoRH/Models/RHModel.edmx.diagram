@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fd48d04994e14be2ae75b446cf234244" Name="Diagram1">
+        <AssociationConnector Association="EGINFO_RHModel.FK_tb_Candidato_tb_Candidato" />
+        <EntityTypeShape EntityType="EGINFO_RHModel.tb_Candidato" Width="1.5" PointX="1.875" PointY="0.625" />
+        <EntityTypeShape EntityType="EGINFO_RHModel.tb_Especialidade" Width="1.5" PointX="7.625" PointY="1.125" />
+        <AssociationConnector Association="EGINFO_RHModel.tb_Detalhe_Candidato" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

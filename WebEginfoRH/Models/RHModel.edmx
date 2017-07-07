@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EGINFO_RHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tb_Candidato">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="nvarchar" MaxLength="200" />
+          <Property Name="cpf" Type="nvarchar" MaxLength="20" />
+          <Property Name="telefone" Type="nvarchar" MaxLength="10" />
+          <Property Name="celular" Type="nvarchar" MaxLength="10" />
+          <Property Name="email" Type="nvarchar" MaxLength="200" />
+          <Property Name="senha" Type="nvarchar" MaxLength="100" />
+          <Property Name="idPerfil" Type="int" />
+          <Property Name="idEndereco" Type="int" Nullable="false" />
+          <Property Name="curriculum" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tb_Detalhe_Candidato">
+          <Key>
+            <PropertyRef Name="idCandidato" />
+            <PropertyRef Name="idEspecialidade" />
+          </Key>
+          <Property Name="idCandidato" Type="int" Nullable="false" />
+          <Property Name="idEspecialidade" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tb_Especialidade">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <Association Name="FK_tb_Detalhe_Candidato_tb_Candidato">
+          <End Role="tb_Candidato" Type="Self.tb_Candidato" Multiplicity="1" />
+          <End Role="tb_Detalhe_Candidato" Type="Self.tb_Detalhe_Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tb_Candidato">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tb_Detalhe_Candidato">
+              <PropertyRef Name="idCandidato" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tb_Detalhe_Candidato_tb_Especialidade">
+          <End Role="tb_Especialidade" Type="Self.tb_Especialidade" Multiplicity="1" />
+          <End Role="tb_Detalhe_Candidato" Type="Self.tb_Detalhe_Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tb_Especialidade">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tb_Detalhe_Candidato">
+              <PropertyRef Name="idEspecialidade" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EGINFO_RHModelStoreContainer">
+          <EntitySet Name="tb_Candidato" EntityType="Self.tb_Candidato" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_Detalhe_Candidato" EntityType="Self.tb_Detalhe_Candidato" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_Especialidade" EntityType="Self.tb_Especialidade" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tb_Detalhe_Candidato_tb_Candidato" Association="Self.FK_tb_Detalhe_Candidato_tb_Candidato">
+            <End Role="tb_Candidato" EntitySet="tb_Candidato" />
+            <End Role="tb_Detalhe_Candidato" EntitySet="tb_Detalhe_Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tb_Detalhe_Candidato_tb_Especialidade" Association="Self.FK_tb_Detalhe_Candidato_tb_Especialidade">
+            <End Role="tb_Especialidade" EntitySet="tb_Especialidade" />
+            <End Role="tb_Detalhe_Candidato" EntitySet="tb_Detalhe_Candidato" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EGINFO_RHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="EGINFO_RHContext" annotation:LazyLoadingEnabled="true" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+          <EntitySet Name="tb_Candidato" EntityType="EGINFO_RHModel.tb_Candidato" />
+          <EntitySet Name="tb_Especialidade" EntityType="EGINFO_RHModel.tb_Especialidade" />
+          <AssociationSet Name="tb_Detalhe_Candidato" Association="EGINFO_RHModel.tb_Detalhe_Candidato">
+            <End Role="tb_Candidato" EntitySet="tb_Candidato" />
+            <End Role="tb_Especialidade" EntitySet="tb_Especialidade" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="tb_Candidato">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="cpf" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="telefone" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="celular" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="senha" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="idPerfil" Type="Int32" />
+          <Property Name="idEndereco" Type="Int32" Nullable="false" />
+          <Property Name="curriculum" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tb_Especialidade" Relationship="EGINFO_RHModel.tb_Detalhe_Candidato" FromRole="tb_Candidato" ToRole="tb_Especialidade" />
+        </EntityType>
+        <EntityType Name="tb_Especialidade">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tb_Candidato" Relationship="EGINFO_RHModel.tb_Detalhe_Candidato" FromRole="tb_Especialidade" ToRole="tb_Candidato" />
+        </EntityType>
+        <Association Name="tb_Detalhe_Candidato">
+          <End Type="EGINFO_RHModel.tb_Candidato" Role="tb_Candidato" Multiplicity="*" />
+          <End Type="EGINFO_RHModel.tb_Especialidade" Role="tb_Especialidade" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EGINFO_RHModelStoreContainer" CdmEntityContainer="EGINFO_RHContext">
+          <EntitySetMapping Name="tb_Candidato">
+            <EntityTypeMapping TypeName="EGINFO_RHModel.tb_Candidato">
+              <MappingFragment StoreEntitySet="tb_Candidato">
+                <ScalarProperty Name="curriculum" ColumnName="curriculum" />
+                <ScalarProperty Name="idEndereco" ColumnName="idEndereco" />
+                <ScalarProperty Name="idPerfil" ColumnName="idPerfil" />
+                <ScalarProperty Name="senha" ColumnName="senha" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="celular" ColumnName="celular" />
+                <ScalarProperty Name="telefone" ColumnName="telefone" />
+                <ScalarProperty Name="cpf" ColumnName="cpf" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_Especialidade">
+            <EntityTypeMapping TypeName="EGINFO_RHModel.tb_Especialidade">
+              <MappingFragment StoreEntitySet="tb_Especialidade">
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="tb_Detalhe_Candidato" TypeName="EGINFO_RHModel.tb_Detalhe_Candidato" StoreEntitySet="tb_Detalhe_Candidato">
+            <EndProperty Name="tb_Especialidade">
+              <ScalarProperty Name="id" ColumnName="idEspecialidade" />
+            </EndProperty>
+            <EndProperty Name="tb_Candidato">
+              <ScalarProperty Name="id" ColumnName="idCandidato" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

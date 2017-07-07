@@ -1,0 +1,33 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Cadastro</h2>
+<div ng-app="candidatosApp" ng-controller="CadastroController">
+    <form role="form" style="max-width: 500px;">
+    
+        <div class="form-group">
+            <label for="nome">
+                Nome:
+            </label>
+            <input type="text" class="form-control" id="nome" ng-model="nome" />
+        </div>
+        <div class="form-group">
+            <label for="lastname">
+                CPF:
+            </label>
+            <input type="text" class="form-control" id="cpf" ng-model="cpf" />
+        </div>
+        <div class="form-group">
+            <label for="perfil">
+                Perfil:
+            </label>
+            <select class="form-control" id="perfil" ng-model="perfil" > <!--ng-options="c.Value as c.Text for c in countries" ng-change="getStates()">-->
+                <option value="">-- Seleccione perfil --</option>
+            </select>
+        </div>
+       
+        </form>
+</div>

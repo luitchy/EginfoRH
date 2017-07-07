@@ -10,21 +10,19 @@ using WebEginfoRH.Models;
 
 namespace WebEginfoRH.Controllers
 {
-    public class CadastroController : Controller
+    public class CandidatoController : Controller
     {
-        private EGINFO_RHContext db = new EGINFO_RHContext();
+        
 
-        // GET: Cadastro
+        // GET: Candidato
         public ActionResult Index()
         {
-            return View(db.tb_Candidato.ToList());
+            return View();
         }
 
-        public JsonResult GetEspecialidade()
+        public ActionResult Cadastro()
         {
-            EGINFO_RHContext db = new EGINFO_RHContext();
-            var lista =  db.tb_Especialidade.Select(n => n).ToList();
-            return Json(lista, JsonRequestBehavior.AllowGet);
+            return View();
         }
 
         [HttpGet]
@@ -38,7 +36,7 @@ namespace WebEginfoRH.Controllers
                 perfis.Add(new System.Web.Mvc.SelectListItem { Text = "Junior", Value = "4" });
             };
 
-            //  var ret = db.LocationTbls.Select(x => new { x.Id, x.LocName }).ToList();
+          //  var ret = db.LocationTbls.Select(x => new { x.Id, x.LocName }).ToList();
 
             return Json(perfis, JsonRequestBehavior.AllowGet);
         }
@@ -53,13 +51,18 @@ namespace WebEginfoRH.Controllers
             };
             return perfis;
         }
-        protected override void Dispose(bool disposing)
+        [HttpPost]
+        public JsonResult GetCEP(string cep)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            return null;
+        }
+
+        [HttpGet]
+        public JsonResult GetEspecialidade()
+        {
+            EGINFO_RHContext db = new EGINFO_RHContext();
+            var lista = db.tb_Especialidade.Select(n => n).ToList();
+            return Json(lista, JsonRequestBehavior.AllowGet);
         }
     }
 }
