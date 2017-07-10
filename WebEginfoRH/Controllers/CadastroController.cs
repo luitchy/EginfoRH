@@ -12,18 +12,18 @@ namespace WebEginfoRH.Controllers
 {
     public class CadastroController : Controller
     {
-        private EGINFO_RHContext db = new EGINFO_RHContext();
+        private EGINFORHContext db = new EGINFORHContext();
 
         // GET: Cadastro
         public ActionResult Index()
         {
-            return View(db.tb_Candidato.ToList());
+            return View(db.Candidatos.ToList());
         }
 
         public JsonResult GetEspecialidade()
         {
-            EGINFO_RHContext db = new EGINFO_RHContext();
-            var lista =  db.tb_Especialidade.Select(n => n).ToList();
+            EGINFORHContext db = new EGINFORHContext();
+            var lista =  db.Especialidades.Select(n => n).ToList();
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
 
@@ -53,6 +53,34 @@ namespace WebEginfoRH.Controllers
             };
             return perfis;
         }
+        [HttpPost]
+        public void Upload(System.Web.HttpPostedFileBase aFile)
+        {
+            string file = aFile.FileName;
+            string path = Server.MapPath("../Upload//");
+            aFile.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
+        }
+        [HttpPost]
+        public int Salvar(Candidato candidato, ICollection<Especialidade> especialidade)
+        {
+            candidato.Especialidades = especialidade.ToList();
+            db.Candidatos.Add(candidato);
+            db.SaveChanges();
+
+           
+            return candidato.id;
+
+        }
+
+       /* [HttpPost]
+        public int Salvar_Especialidades(tb_Candidato especialidade)
+        {
+            /*EGINFO_RHModel.tb_Detalhe_Candidato;
+            db..Add(especialidade);
+            db.SaveChanges();
+            return candidato.id;
+
+        }*/
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -12,19 +12,28 @@ namespace WebEginfoRH.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
-    public partial class Model1Container : DbContext
+
+    public class EGINFORHContext : DbContext
     {
-        public Model1Container()
-            : base("name=Model1Container")
+        public EGINFORHContext() : base("name=ModeloDados")
         {
         }
-    
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            modelBuilder.Entity<Candidato>()
+                            
+                .HasMany<Especialidade>(s => s.Especialidades)
+                .WithMany(c => c.Candidatos)
+                .Map(cs =>
+                {
+                    cs.MapLeftKey("idCandidato");
+                    cs.MapRightKey("idEspecialidade");
+                    cs.ToTable("tb_Detalhe_Candidato");
+                });
         }
-    
+
+        public virtual DbSet<Candidato> Candidatos { get; set; }
         public virtual DbSet<Especialidade> Especialidades { get; set; }
     }
 }

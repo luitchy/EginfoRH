@@ -157,35 +157,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Especialidade.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Model1.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Model1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Model1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ModeloDados.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModeloDados.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ModeloDados.cs" />
-    <Compile Include="Models\ModeloDados1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModeloDados.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Candidato.cs" />
+    <Compile Include="Models\EGInfoRHContext.cs" />
+    <Compile Include="Models\Especialidade.cs" />
     <Compile Include="Models\RHModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -210,38 +184,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bower_components\angular-viacep\demo\index.html" />
-    <Content Include="bower_components\angular-viacep\dist\angular-viacep.min.js" />
-    <Content Include="bower_components\angular-viacep\gulpfile.js" />
-    <Content Include="bower_components\angular\angular-csp.css" />
-    <Content Include="bower_components\angular\angular.js" />
-    <Content Include="bower_components\angular\angular.min.js" />
-    <Content Include="bower_components\angular\index.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\Model1.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\Model1.edmx.sql" />
-    <Content Include="Models\Model1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.cs</LastGenOutput>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\ModeloDados.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ModeloDados.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\ModeloDados.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ModeloDados1.cs</LastGenOutput>
-    </Content>
     <Content Include="Models\RHModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>RHModel.edmx</DependentUpon>
@@ -275,35 +223,6 @@
     <Content Include="Models\RHModel.edmx.diagram">
       <DependentUpon>RHModel.edmx</DependentUpon>
     </Content>
-    <EntityDeploy Include="Models\Model1.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Model1.edmx.diagram">
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Content>
-    <Content Include="bower_components\angular-viacep\.bower.json" />
-    <Content Include="bower_components\angular-viacep\bower.json" />
-    <Content Include="bower_components\angular-viacep\karma.conf.coffee" />
-    <Content Include="bower_components\angular-viacep\LICENSE" />
-    <Content Include="bower_components\angular-viacep\package.json" />
-    <Content Include="bower_components\angular-viacep\README.md" />
-    <Content Include="bower_components\angular-viacep\src\directives\viaCep.directive.coffee" />
-    <Content Include="bower_components\angular-viacep\src\directives\viaCep.directive.spec.coffee" />
-    <Content Include="bower_components\angular-viacep\src\directives\viaCepForm.directive.coffee" />
-    <Content Include="bower_components\angular-viacep\src\directives\viaCepForm.directive.spec.coffee" />
-    <Content Include="bower_components\angular-viacep\src\helpers\viaCep.helper.coffee" />
-    <Content Include="bower_components\angular-viacep\src\helpers\viaCep.helper.spec.coffee" />
-    <Content Include="bower_components\angular-viacep\src\services\viaCep.service.coffee" />
-    <Content Include="bower_components\angular-viacep\src\services\viaCep.service.spec.coffee" />
-    <Content Include="bower_components\angular-viacep\src\viaCep.module.coffee" />
-    <Content Include="bower_components\angular\.bower.json" />
-    <Content Include="bower_components\angular\angular.min.js.gzip" />
-    <Content Include="bower_components\angular\angular.min.js.map" />
-    <Content Include="bower_components\angular\bower.json" />
-    <Content Include="bower_components\angular\LICENSE.md" />
-    <Content Include="bower_components\angular\package.json" />
-    <Content Include="bower_components\angular\README.md" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -335,6 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Upload\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -12,7 +12,7 @@ app.controller("CadastroController", function ($scope, $http) {
         gia: null,
     }
 
-
+    
     /*  $http.get('http://apps.widenet.com.br/busca-cep/api/' + $scope.cep + '.json').then(successCallback, errorCallback);
        function successCallback(response) {
            $scope.local_encontrado = response;//success code
@@ -39,6 +39,73 @@ app.controller("CadastroController", function ($scope, $http) {
         };
     };
 
+    
+
+
+    $scope.save = function () {
+        var Candidato = {
+            nome: $scope.nome,
+            cpf: $scope.cpf,
+            telefone: $scope.telefone,
+            celular: $scope.celular,
+            email: $scope.email,
+            idPerfil: $scope.idPerfil,
+            curriculum: $scope.myFile.name
+        };
+        $scope.id = 0;
+        var Indata = { candidato: Candidato, especialidade: $scope.especialidades}
+        $http({
+            method: 'POST',
+            url: '/Cadastro/Salvar',
+            data: Indata
+        }).then(successCallback, errorCallback);
+        function successCallback(response) {
+            $scope.id = response.data;//success code
+        }
+        function errorCallback(error) {
+            $scope.response.error = { message: error, status: status };//error code
+        }
+       
+       // $scope.isViewLoading = false;
+      /*  var promisePost = SPACRUDService.post(Student);
+
+        promisePost.then(function (pl) {
+            alert("Student Saved Successfully.");
+        },
+            function (errorPl) {
+                $scope.error = 'failure loading Student', errorPl;
+            });*/
+
+    };  
+
+
+  $scope.submitForm = function () {
+        $scope.isViewLoading = true;
+       // console.log('Form is submitted with:', $scope.cust);
+
+        //$http service that send or receive data from the remote server
+        $http({
+            method: 'POST',
+            url: '/Cadastro/Cadastro1',
+            data: $scope.cust
+        }).success(function (data, status, headers, config) {
+            $scope.errors = [];
+            if (data.success === true) {
+                $scope.cust = {};
+                $scope.message = 'Form data Submitted!';
+                $scope.result = "color-green";
+                $location.path(data.redirectUrl);
+                $window.location.reload();
+            }
+            else {
+                $scope.errors = data.errors;
+            }
+        }).error(function (data, status, headers, config) {
+            $scope.errors = [];
+            $scope.message = 'Unexpected Error while saving data!!';
+        });
+        $scope.isViewLoading = false;
+    }
 
     /*$scope.submitForm = function () {
         $scope.isViewLoading = true;
@@ -85,10 +152,23 @@ app.controller("CadastroController", function ($scope, $http) {
     function errorCallback(error) {
         //error code
     }
-
+    $scope.user = {
+        especialidades: []
+    };
     //teste
-    $scope.perfis1 = [["1", "Lider"], ["2", "Senior"], ["3", "Pleno"]];
+    $scope.perfis1 = [["1", "Lider"], ["2", "Senior"], ["3", "Pleno"], ["4", "Junior"]];
 
+    $scope.$on("fileSelected", function (event, args) {
+        $scope.$apply(function () {
+            switch (args.field) {
+                case "myFile":
+                    $scope.myFile = args.file;
+                    break;
+                default:
+                    break;
+            }
+        });
+    });
   //  $scope.GetLocList();
 
          /*   $http({
@@ -114,4 +194,33 @@ app.controller("CadastroController", function ($scope, $http) {
 
     
    
+});
+
+
+app.directive('fileUpload', function () {
+    return {
+        scope: true,
+        link: function (scope, el, attrs) {
+            el.bind('change', function (event) {
+                var files = event.target.files;
+
+                //iterate files since 'multiple' may be specified on the element
+                if (files.length == 0) {
+                    scope.$emit("fileSelected", { file: null, field: event.target.name });
+                } else {
+                    for (var i = 0; i < files.length; i++) {
+                        var ext = files[i].name.toUpperCase().split('.').pop();
+                       // if (ext == "PDF" || ext == "DOCX" || ext == "DOC") {
+                            scope.$emit("fileSelected", { file: files[i], field: event.target.name });
+                       /* } else {
+                            alert('Arquivo inválido');
+                            //scope.$emit("fileSelected", { file: null, field: null });
+                            //return;
+                        }
+                      */
+                    }
+                }
+            });
+        }
+    };
 });

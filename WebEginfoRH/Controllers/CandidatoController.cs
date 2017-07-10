@@ -12,7 +12,7 @@ namespace WebEginfoRH.Controllers
 {
     public class CandidatoController : Controller
     {
-        
+        private EGINFORHContext db = new EGINFORHContext();
 
         // GET: Candidato
         public ActionResult Index()
@@ -23,6 +23,13 @@ namespace WebEginfoRH.Controllers
         public ActionResult Cadastro()
         {
             return View();
+        }
+
+        public JsonResult GetEspecialidade()
+        {
+            EGINFORHContext db = new EGINFORHContext();
+            var lista = db.Especialidades.Select(n => n).ToList();
+            return Json(lista, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -36,7 +43,7 @@ namespace WebEginfoRH.Controllers
                 perfis.Add(new System.Web.Mvc.SelectListItem { Text = "Junior", Value = "4" });
             };
 
-          //  var ret = db.LocationTbls.Select(x => new { x.Id, x.LocName }).ToList();
+            //  var ret = db.LocationTbls.Select(x => new { x.Id, x.LocName }).ToList();
 
             return Json(perfis, JsonRequestBehavior.AllowGet);
         }
@@ -52,17 +59,22 @@ namespace WebEginfoRH.Controllers
             return perfis;
         }
         [HttpPost]
-        public JsonResult GetCEP(string cep)
+        public void Upload(System.Web.HttpPostedFileBase aFile)
         {
-            return null;
+            string file = aFile.FileName;
+            string path = Server.MapPath("../Upload//");
+            aFile.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
         }
-
-        [HttpGet]
-        public JsonResult GetEspecialidade()
+        [HttpPost]
+        public int Salvar(Candidato candidato, ICollection<Especialidade> especialidade)
         {
-            EGINFO_RHContext db = new EGINFO_RHContext();
-            var lista = db.tb_Especialidade.Select(n => n).ToList();
-            return Json(lista, JsonRequestBehavior.AllowGet);
+            candidato.Especialidades = especialidade;
+            db.Candidatos.Add(candidato);
+            db.SaveChanges();
+
+
+            return candidato.id;
+
         }
     }
 }

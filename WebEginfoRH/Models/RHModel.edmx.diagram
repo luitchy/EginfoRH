@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="fd48d04994e14be2ae75b446cf234244" Name="Diagram1">
         <AssociationConnector Association="EGINFO_RHModel.FK_tb_Candidato_tb_Candidato" />
-        <EntityTypeShape EntityType="EGINFO_RHModel.tb_Candidato" Width="1.5" PointX="1.875" PointY="0.625" />
+        <EntityTypeShape EntityType="EGINFO_RHModel.tb_Candidato" Width="1.5" PointX="1.875" PointY="0.625" IsExpanded="true" />
         <EntityTypeShape EntityType="EGINFO_RHModel.tb_Especialidade" Width="1.5" PointX="7.625" PointY="1.125" />
         <AssociationConnector Association="EGINFO_RHModel.tb_Detalhe_Candidato" />
       </Diagram>
