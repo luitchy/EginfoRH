@@ -159,6 +159,7 @@
     </Compile>
     <Compile Include="Models\Candidato.cs" />
     <Compile Include="Models\EGInfoRHContext.cs" />
+    <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Especialidade.cs" />
     <Compile Include="Models\RHModel.Context.cs">
       <AutoGen>True</AutoGen>

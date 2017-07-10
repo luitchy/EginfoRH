@@ -26,5 +26,6 @@ namespace WebEginfoRH.Models
         public string curriculum { get; set; }
 
         public virtual ICollection<Especialidade> Especialidades { get; set; }
+        public virtual Endereco Endereco { get; set; }
     }
 }

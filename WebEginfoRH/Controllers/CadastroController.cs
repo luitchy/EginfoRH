@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebEginfoRH.Models;
@@ -20,10 +21,11 @@ namespace WebEginfoRH.Controllers
             return View(db.Candidatos.ToList());
         }
 
-        public JsonResult GetEspecialidade()
+        public async Task<JsonResult> GetEspecialidade()
         {
-            EGINFORHContext db = new EGINFORHContext();
-            var lista =  db.Especialidades.Select(n => n).ToList();
+           
+            EGINFORHContext db = new EGINFORHContext();          
+            var lista =  await db.Especialidades.ToListAsync();
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
 
@@ -61,26 +63,20 @@ namespace WebEginfoRH.Controllers
             aFile.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
         }
         [HttpPost]
-        public int Salvar(Candidato candidato, ICollection<Especialidade> especialidade)
+        public int Salvar(Candidato candidato, ICollection<int> especialidade)
         {
-            candidato.Especialidades = especialidade.ToList();
+
+            var xpto = (from d in db.Especialidades.ToList()
+                        join e in especialidade on d.id equals e
+                        select d).ToList();
+
+            candidato.Especialidades = xpto;
             db.Candidatos.Add(candidato);
             db.SaveChanges();
 
-           
             return candidato.id;
 
         }
-
-       /* [HttpPost]
-        public int Salvar_Especialidades(tb_Candidato especialidade)
-        {
-            /*EGINFO_RHModel.tb_Detalhe_Candidato;
-            db..Add(especialidade);
-            db.SaveChanges();
-            return candidato.id;
-
-        }*/
         protected override void Dispose(bool disposing)
         {
             if (disposing)

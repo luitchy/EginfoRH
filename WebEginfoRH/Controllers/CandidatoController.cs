@@ -25,6 +25,10 @@ namespace WebEginfoRH.Controllers
             return View();
         }
 
+        public ActionResult Register()
+        {
+            return View();
+        }
         public JsonResult GetEspecialidade()
         {
             EGINFORHContext db = new EGINFORHContext();
@@ -65,13 +69,17 @@ namespace WebEginfoRH.Controllers
             string path = Server.MapPath("../Upload//");
             aFile.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
         }
-        [HttpPost]
-        public int Salvar(Candidato candidato, ICollection<Especialidade> especialidade)
+         [HttpPost]
+        public int Salvar(Candidato candidato, ICollection<int> especialidade)
         {
-            candidato.Especialidades = especialidade;
+
+            var xpto = (from d in db.Especialidades.ToList()
+                        join e in especialidade on d.id equals e
+                        select d).ToList();
+
+            candidato.Especialidades = xpto;
             db.Candidatos.Add(candidato);
             db.SaveChanges();
-
 
             return candidato.id;
 

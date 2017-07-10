@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace WebEginfoRH.Models
         }
         public int id { get; set; }
         public string nome { get; set; }
-
+        
         public virtual ICollection<Candidato> Candidatos { get; set; }
     }
 }

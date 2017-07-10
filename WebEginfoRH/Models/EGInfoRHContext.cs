@@ -17,6 +17,7 @@ namespace WebEginfoRH.Models
     {
         public EGINFORHContext() : base("name=ModeloDados")
         {
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -31,9 +32,16 @@ namespace WebEginfoRH.Models
                     cs.MapRightKey("idEspecialidade");
                     cs.ToTable("tb_Detalhe_Candidato");
                 });
+
+            modelBuilder.Entity<Endereco>()
+                 .HasMany<Candidato>(s => s.Candidatos) 
+                    .WithRequired(s => s.Endereco) 
+                    .HasForeignKey(s => s.idEndereco); 
+         
         }
 
         public virtual DbSet<Candidato> Candidatos { get; set; }
         public virtual DbSet<Especialidade> Especialidades { get; set; }
+        public virtual DbSet<Endereco> Enderecos { get; set; }
     }
 }

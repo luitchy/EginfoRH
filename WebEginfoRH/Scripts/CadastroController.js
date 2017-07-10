@@ -1,25 +1,6 @@
 ﻿var app = angular.module("candidatosApp", []);
 
 app.controller("CadastroController", function ($scope, $http) {
-    $scope.address = {
-        zipcode: null,
-        street: null,
-        neighborhood: null,
-        uf: null,
-        city: null,
-        unit: null,
-        ibge: null,
-        gia: null,
-    }
-
-    
-    /*  $http.get('http://apps.widenet.com.br/busca-cep/api/' + $scope.cep + '.json').then(successCallback, errorCallback);
-       function successCallback(response) {
-           $scope.local_encontrado = response;//success code
-       }
-       function errorCallback(error) {
-           //error code
-       }*/
 
     function busca() {
         $http.get('http://api.postmon.com.br/v1/cep/' + $scope.cep).then(successCallback, errorCallback);
@@ -31,16 +12,12 @@ app.controller("CadastroController", function ($scope, $http) {
         }
     }
   
-    $scope.busca = busca;
- 
+    $scope.busca = busca; 
     $scope.enter = function (e) {
         if (e.keyCode == 13) {
             $scope.busca();
         };
     };
-
-    
-
 
     $scope.save = function () {
         var Candidato = {
@@ -53,7 +30,7 @@ app.controller("CadastroController", function ($scope, $http) {
             curriculum: $scope.myFile.name
         };
         $scope.id = 0;
-        var Indata = { candidato: Candidato, especialidade: $scope.especialidades}
+        var Indata = { candidato: Candidato, especialidade: $scope.especialidadeSelecionada }
         $http({
             method: 'POST',
             url: '/Cadastro/Salvar',
@@ -65,17 +42,6 @@ app.controller("CadastroController", function ($scope, $http) {
         function errorCallback(error) {
             $scope.response.error = { message: error, status: status };//error code
         }
-       
-       // $scope.isViewLoading = false;
-      /*  var promisePost = SPACRUDService.post(Student);
-
-        promisePost.then(function (pl) {
-            alert("Student Saved Successfully.");
-        },
-            function (errorPl) {
-                $scope.error = 'failure loading Student', errorPl;
-            });*/
-
     };  
 
 
@@ -152,9 +118,19 @@ app.controller("CadastroController", function ($scope, $http) {
     function errorCallback(error) {
         //error code
     }
-    $scope.user = {
-        especialidades: []
+
+    $scope.especialidadeSelecionada = [];
+    $scope.toggleSelection = function toggleSelection(especialidade) {
+        var idx = $scope.especialidadeSelecionada.indexOf(especialidade);
+        if (idx > -1) {
+            $scope.especialidadeSelecionada.splice(idx, 1);
+        }
+        
+        else {
+            $scope.especialidadeSelecionada.push(especialidade);
+        }
     };
+    
     //teste
     $scope.perfis1 = [["1", "Lider"], ["2", "Senior"], ["3", "Pleno"], ["4", "Junior"]];
 
@@ -169,31 +145,7 @@ app.controller("CadastroController", function ($scope, $http) {
             }
         });
     });
-  //  $scope.GetLocList();
-
-         /*   $http({
-            method: 'GET',
-            url: '/Candidato/Get',
-            data: $scope.cust
-        }).success(function (data, status, headers, config) {
-            $scope.errors = [];
-            if (data.success === true) {*/
-               /* $scope.cust = {};
-                $scope.message = 'Form data Submitted!';
-                $scope.result = "color-green";
-                $location.path(data.redirectUrl);
-                $window.location.reload();*/
-         /*   }
-            else {
-                $scope.errors = data.errors;
-            }
-        }).error(function (data, status, headers, config) {
-            $scope.errors = [];
-            $scope.message = 'Unexpected Error while saving data!!';
-        });*/
-
-    
-   
+     
 });
 
 

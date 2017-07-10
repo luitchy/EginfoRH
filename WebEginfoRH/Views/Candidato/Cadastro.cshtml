@@ -70,7 +70,8 @@
                     
                 </label>
                 <label ng-repeat="x in especialidades">
-                    <input type="checkbox" checklist-model="user.especialidades" checklist-value="x.id"> {{x.nome}}
+                    <input type="checkbox" name="idespecialidade" ng-checked="especialidadeSelecionada.indexOf(x.id) > -1"
+                           ng-click="toggleSelection(x.id)" value="{{x.id}}"> {{x.nome}}
                 </label>
             </div>
         </div>
@@ -141,11 +142,6 @@
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular-route.min.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular-resource.min.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/CadastroController.js")"></script>
-        <!--   <script type="text/javascript" src="@Url.Content("~/bower_components/angular-viacep/dist/angular-viacep.min.js")"></script>
-         <script src="viaCep.module.js"></script>
-         <script src="directives/viaCepForm.directive.js"></script>
-          <script src="directives/viaCep.directive.js"></script>
-          <script src="helpers/viaCep.helper.js"></script>
-          <script src="services/viaCep.service.js"></script>-->
+
     }
 </div>
