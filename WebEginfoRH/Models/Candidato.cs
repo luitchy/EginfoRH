@@ -21,11 +21,11 @@ namespace WebEginfoRH.Models
         public string celular { get; set; }
         public string email { get; set; }
         public string senha { get; set; }
-        public Nullable<int> idPerfil { get; set; }
+        public Nullable<int> idPerfil { get; set; }       
         public int idEndereco { get; set; }
         public string curriculum { get; set; }
-
         public virtual ICollection<Especialidade> Especialidades { get; set; }
+        [ForeignKey("idEndereco")]
         public virtual Endereco Endereco { get; set; }
     }
 }

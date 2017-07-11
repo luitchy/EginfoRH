@@ -63,13 +63,17 @@ namespace WebEginfoRH.Controllers
             aFile.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
         }
         [HttpPost]
-        public int Salvar(Candidato candidato, ICollection<int> especialidade)
+        public int Salvar(Candidato candidato, ICollection<int> especialidade, Endereco endereco)
         {
-
+            db.Enderecos.Add(endereco);
+            db.SaveChanges();
+            int idEndereco = endereco.idEndereco;
+            
             var xpto = (from d in db.Especialidades.ToList()
                         join e in especialidade on d.id equals e
                         select d).ToList();
 
+            candidato.idEndereco = idEndereco;
             candidato.Especialidades = xpto;
             db.Candidatos.Add(candidato);
             db.SaveChanges();

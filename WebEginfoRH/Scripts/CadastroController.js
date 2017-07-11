@@ -29,8 +29,17 @@ app.controller("CadastroController", function ($scope, $http) {
             idPerfil: $scope.idPerfil,
             curriculum: $scope.myFile.name
         };
+
+        var Endereco = {
+            cep: $scope.cep,
+            logradouro: $scope.local_encontrado.logradouro,
+            bairro: $scope.local_encontrado.bairro,
+            cidade: $scope.local_encontrado.cidade,
+            estado: $scope.local_encontrado.estado,
+            numero: $scope.local_encontrado.numero
+        }
         $scope.id = 0;
-        var Indata = { candidato: Candidato, especialidade: $scope.especialidadeSelecionada }
+        var Indata = { candidato: Candidato, especialidade: $scope.especialidadeSelecionada, endereco: Endereco }
         $http({
             method: 'POST',
             url: '/Cadastro/Salvar',
