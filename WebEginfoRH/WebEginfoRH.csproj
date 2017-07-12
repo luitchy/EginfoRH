@@ -158,6 +158,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Candidato.cs" />
+    <Compile Include="Models\Detalhe_Candidato.cs" />
+    <Compile Include="Models\DTOGenericObject.cs" />
     <Compile Include="Models\EGInfoRHContext.cs" />
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Especialidade.cs" />
@@ -224,6 +226,7 @@
     <Content Include="Models\RHModel.edmx.diagram">
       <DependentUpon>RHModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -232,6 +235,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MascaraValidacao.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />

@@ -36,6 +36,62 @@ namespace WebEginfoRH.Controllers
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetCandidato(int[] esp)
+        {
+            EGINFORHContext db = new EGINFORHContext();
+            var result = (
+             from a in db.Especialidades
+             from b in a.Candidatos
+             join c in db.Candidatos on b.id equals c.id
+             where esp.Contains(a.id)
+             select new DTOGenericObject
+             {
+                 ID = c.id,
+                 Nome = c.nome,
+                // Lista = c.Especialidades
+             }
+             );
+
+          
+            /* var accountNumbers = db.Especialidades.Select(x => x.Candidatos).ToArray();
+
+             var duplicationChecklist =
+                     from profile in db.Especialidades
+                                                  .Where(p => accountNumbers
+                                                                 .Contains(esp))
+                                                  .AsEnumerable() // Continue in memory
+         join param in lstFarmerProfiles on
+                         new { profile.Name, profile.AccountNo } equals
+                         new { param.Name, param.AccountNo }
+                     select profile
+            // return result;*/
+
+
+            /* int[] espec = { 1, 2, 3 };
+             var xpto = (from d in db.Candidatos
+                         join e in db.Enderecos on d.idEndereco equals e.idEndereco
+                         where d.idEndereco == esp
+                         select d).ToList();*/
+
+
+
+            /*   var lista = (from x in xpto.AsEnumerable()
+                            join e in db.Especialidades
+                               .Select(x => x.Candidatos).ToArray();
+                               */
+
+            // var users = db.Especialidades.Where(r => xpto.AsEnumerable().Any(s => s == r.Candidatos)).SelectMany(r => r.nome);
+            // Candidato o = db.Candidatos.Include("tb_Detalhe_Candidato").FirstOrDefault();
+            // var result = (from od in db.Especialidades select od).ToList().Select(x => new { id = o.id });
+
+
+            /* var users = db.Especialidades.Where(r => db.Candidatos.Any(s => s == r.Candidatos)).SelectMany(r => r.nome);
+
+             var especialidades = db.Especialidades.Select(s => s.id).ToList();*/
+
+            //var lista = db.Candidatos.Select(n => n).ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         [HttpGet]
         public JsonResult GetPerfil()
         {

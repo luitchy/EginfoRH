@@ -11,7 +11,12 @@ app.controller("CadastroController", function ($scope, $http) {
             $scope.response.error = { message: error, status: status };//error code
         }
     }
-  
+
+    $scope.sendForm = function () {
+        $scope.msg = "Form Validated";
+    };
+
+    $scope.emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     $scope.busca = busca; 
     $scope.enter = function (e) {
         if (e.keyCode == 13) {

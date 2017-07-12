@@ -4,70 +4,73 @@
     ViewBag.Title = "Cadastro";
 }
 
-<h2>Cadastro</h2> 
-<script>
-
+<script type="text/javascript">
+   
 </script>
+<h2>Cadastro</h2>
 <div ng-app="candidatosApp" ng-controller="CadastroController">
-    <form role="form" style="max-width: 500px;">
 
-        <div class="form-group">
-            <label for="nome" class="control-label col-sm-3">
-                Nome:
-            </label>
-            <input type="text" class="form-control" id="nome" ng-model="nome" />
-        </div>
-        <div class="form-group">
-            <label for="cpf" class="control-label col-sm-3">
-                CPF:
-            </label>
-            <input type="text" class="form-control" id="cpf" ng-model="cpf" />
-        </div>
-        <div class="form-group">
-            <label for="email" class="control-label col-sm-3">
-                Email:
-            </label>
-            <input type="text" class="form-control" id="email"  ng-model="email" />
-        </div>
-        <div class="form-group">
-            <label for="telefone" class="control-label col-sm-3">
-                Telefone:
-            </label>
-            <input type="text" class="form-control" id="telefone" ng-model="telefone" />
-        </div>
-        <div class="form-group">
-            <label for="celular" class="control-label col-sm-3">
-                Celular:
-            </label>
-            <input type="text" class="form-control" id="celular" ng-model="celular" />
-        </div>
-        <div class="form-group">
-            <label for="perfil" class="control-label col-sm-3">
-                Perfil:
-            </label>
-            <select class="form-control" id="perfil" ng-model="idPerfil">
-                <!--ng-options="c.Value as c.Text for c in perfis" -->
-                <!--ng-change="getStates()">-->
-                <option value="">-- Seleccione perfil --</option>
-                <option ng-repeat="item in perfis1" value="{{item[0]}}">{{item[1]}}</option>
-            </select>
-        </div>
-
-
-        <!-- <div class="form-group">
-               <label for="idendereco">
-                   Endereço:
-               </label>
-               <select class="form-control" id="idendereco" ng-model="idendereco" ng-options="c.Value as c.Text for c in perfis">
-                   <!--ng-options="c.Value as c.Text for c in perfis" -->
-        <!--ng-change="getStates()">-->
-        <!--   <option value="">-- Seleccione perfil --</option>
-            </select>
-        </div>-->
+    <form name="userForm" >
         <div class="row">
-            <div class="form-group">
+            <div class="form-group col-md-3">
+                <label for="nome" class="control-label">
+                    Nome:
+                </label>
+                <input type="text" class="form-control" id="nome" ng-model="nome" required />
+                <span class="error" ng-show="userForm.nome.$error.required"> Campo requerido! </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="cpf" class="control-label">
+                    CPF:
+                </label>
+                <input type="text" class="form-control" id="cpf" onBlur="ValidarCPF(userForm.cpf);"
+                       onKeyPress="MascaraCPF(userForm.cpf);" maxlength="14" ng-model="cpf" required />
+                <span class="error" ng-show="userForm.cpf.$error.required"> Campo requerido! </span>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="email" class="control-label">
+                    Email:
+                </label>
+                <input type="email" class="form-control" id="email" ng-model="email" ng-pattern="emailFormat" required />
+                <span class="error" ng-show="userForm.email.$error.required"> Campo requerido! </span>
+                <span class="error" ng-show="(userForm.$dirty||submitted)&&userForm.$error.email">Email inválido</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="telefone" class="control-label">
+                    Telefone:
+                </label>
+                <input type="text" class="form-control" id="telefone" maxlength="14" onKeyPress="MascaraTelefone(userForm.telefone);" ng-model="telefone" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="celular" class="control-label">
+                    Celular:
+                </label>
+                <input type="text" class="form-control" id="celular" maxlength="15" onKeyPress="MascaraTelefone(userForm.celular);" ng-model="celular" />
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="perfil" class="control-label">
+                    Perfil:
+                </label>
+                <select class="form-control" id="perfil" ng-model="idPerfil">
+                    <!--ng-options="c.Value as c.Text for c in perfis" -->
+                    <!--ng-change="getStates()">-->
+                    <option value="">-- Seleccione perfil --</option>
+                    <option ng-repeat="item in perfis1" value="{{item[0]}}">{{item[1]}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group  col-md-10">
                 <label class="control-label">
-                    
+                    Especialidades:
                 </label>
                 <label ng-repeat="x in especialidades">
                     <input type="checkbox" name="idespecialidade" ng-checked="especialidadeSelecionada.indexOf(x.id) > -1"
@@ -75,73 +78,91 @@
                 </label>
             </div>
         </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">
+        <div class="row">
+            <div class="form-group  col-md-2">
+                <label class="control-label">
                     CEP:
                 </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" ng-model="cep" ng-keypress="enter($event)">
-                    <button class="btn btn-primary" ng-click="busca()">Buscar</button>
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label class="control-label col-sm-3">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group  col-md-2">
+
+                <input type="text" onKeyPress="MascaraCep(userForm.cep);"
+                       maxlength="10"
+                       id="cep"
+                       class="form-control" ng-model="cep" ng-keypress="enter($event)">
+                <span class="error" ng-show="userForm.cep.$error.required"> Campo requerido! </span>
+            </div>
+            <div class="form-group  col-md-2">
+                <button class="btn btn-primary" ng-click="busca()">Buscar</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group   col-md-3">
+                <label class="control-label">
                     Logradouro:
                 </label>
-                <div class="col-sm-*">
-                    <input type="text" class="form-control" ng-model="local_encontrado.logradouro" />
-                </div>
+                <input type="text" class="form-control" ng-model="local_encontrado.logradouro" />
+
+
+
+
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">
+            <div class="form-group col-md-3">
+                <label class="control-label">
                     Bairro:
                 </label>
-                <div class="col-sm-*">
-                    <input type="text" class="form-control" ng-model="local_encontrado.bairro" />
-                </div>
+                <input type="text" class="form-control" ng-model="local_encontrado.bairro" />
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label class="control-label">
                     Cidade:
                 </label>
-                <div class="col-sm-*">
-                    <input type="text" class="form-control" ng-model="local_encontrado.cidade" />
-                </div>
+                <input type="text" class="form-control" ng-model="local_encontrado.cidade" />
+
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">
+            <div class="form-group col-md-1">
+                <label class="control-label">
                     Estado:
                 </label>
-                <div class="col-sm-*">
-                    <input type="text" class="form-control" ng-model="local_encontrado.estado" />
-                </div>
-            </div>
+                <input type="text" class="form-control" ng-model="local_encontrado.estado" />
 
-            <div class="form-group">
-                <label class="control-label col-sm-3">
-                    Curriculum:
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group  col-md-7">
+                <label class="control-label">
+                    Curriculo:
                 </label>
-                <div class="col-sm-*">
-                    <input ng-model="curriculum" type="file" name="myFile" accept="application/pdf,application/msword,
+                <input ng-model="curriculum" type="file" name="myFile" accept="application/pdf,application/msword,
   application/vnd.openxmlformats-officedocument.wordprocessingml.document" file-upload />
 
-                    <label class="control-label">
-                        Somente serão aceitos arquivos no formato PDF, DOC e DOCX.
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
+                <label>
+                    Somente serão aceitos arquivos no formato PDF, DOC e DOCX.
+                </label>
 
-                <input type="button" class="btn btn-primary" value="Salvar" data-ng-click="save()" />
             </div>
-</form>
+        </div>
+        <div class="row">
+            <div class="form-group  col-md-7">
+
+                <input type="button" class="btn btn-primary" value="Enviar" data-ng-click="save()" />
+            </div>
+        </div>
+    </form>
 
     @section scripts{
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular-route.min.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular-resource.min.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/CadastroController.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/MascaraValidacao.js")"></script>
 
     }
 </div>
