@@ -1,56 +1,50 @@
-﻿
-
-@{
+﻿@{
     ViewBag.Title = "Cadastro";
 }
 
-<script type="text/javascript">
-   
-</script>
-<h2>Cadastro</h2>
+
 <div ng-app="candidatosApp" ng-controller="CadastroController">
 
-    <form name="userForm" >
+    <form name="userForm" novalidate ng-submit="save()">
         <div class="row">
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-10">
                 <label for="nome" class="control-label">
-                    Nome:
+                    Nome (*) :
                 </label>
-                <input type="text" class="form-control" id="nome" ng-model="nome" required />
-                <span class="error" ng-show="userForm.nome.$error.required"> Campo requerido! </span>
+                <input only-letters-input type="text" class="form-control" id="nome" ng-model="nome" maxlength="80" required />
+                <!--<span class="error" ng-show="userForm.nome.$error.required"> Campo requerido! </span> -->
+
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-3">
                 <label for="cpf" class="control-label">
-                    CPF:
+                    CPF (*) :
                 </label>
                 <input type="text" class="form-control" id="cpf" onBlur="ValidarCPF(userForm.cpf);"
                        onKeyPress="MascaraCPF(userForm.cpf);" maxlength="14" ng-model="cpf" required />
-                <span class="error" ng-show="userForm.cpf.$error.required"> Campo requerido! </span>
             </div>
             <div class="form-group col-md-3">
                 <label for="email" class="control-label">
-                    Email:
+                    Email (*) :
                 </label>
                 <input type="email" class="form-control" id="email" ng-model="email" ng-pattern="emailFormat" required />
                 <span class="error" ng-show="userForm.email.$error.required"> Campo requerido! </span>
                 <span class="error" ng-show="(userForm.$dirty||submitted)&&userForm.$error.email">Email inválido</span>
             </div>
         </div>
-
         <div class="row">
-            <div class="form-group col-md-3">
+           <!-- <div class="form-group col-md-3">
                 <label for="telefone" class="control-label">
                     Telefone:
                 </label>
                 <input type="text" class="form-control" id="telefone" maxlength="14" onKeyPress="MascaraTelefone(userForm.telefone);" ng-model="telefone" />
-            </div>
+            </div> -->
             <div class="form-group col-md-3">
                 <label for="celular" class="control-label">
                     Celular:
                 </label>
-                <input type="text" class="form-control" id="celular" maxlength="15" onKeyPress="MascaraTelefone(userForm.celular);" ng-model="celular" />
+                <input type="text" class="form-control" id="celular" maxlength="15" onKeyPress="MascaraCelular(userForm.celular);" ng-model="celular" />
             </div>
 
         </div>
@@ -59,9 +53,7 @@
                 <label for="perfil" class="control-label">
                     Perfil:
                 </label>
-                <select class="form-control" id="perfil" ng-model="idPerfil">
-                    <!--ng-options="c.Value as c.Text for c in perfis" -->
-                    <!--ng-change="getStates()">-->
+                <select class="form-control" id="perfil" ng-model="idPerfil" required>
                     <option value="">-- Seleccione perfil --</option>
                     <option ng-repeat="item in perfis1" value="{{item[0]}}">{{item[1]}}</option>
                 </select>
@@ -73,7 +65,10 @@
                     Especialidades:
                 </label>
                 <label ng-repeat="x in especialidades">
-                    <input type="checkbox" name="idespecialidade" ng-checked="especialidadeSelecionada.indexOf(x.id) > -1"
+                    <input type="checkbox" name="idespecialidade"
+                           ng-model="x.checked" 
+                           ng-checked="especialidadeSelecionada.indexOf(x.id) > -1"
+                           ng-required="especialidadeSelecionada.length==0" 
                            ng-click="toggleSelection(x.id)" value="{{x.id}}"> {{x.nome}}
                 </label>
             </div>
@@ -81,7 +76,7 @@
         <div class="row">
             <div class="form-group  col-md-2">
                 <label class="control-label">
-                    CEP:
+                    CEP (*) :
                 </label>
 
             </div>
@@ -90,10 +85,9 @@
             <div class="form-group  col-md-2">
 
                 <input type="text" onKeyPress="MascaraCep(userForm.cep);"
-                       maxlength="10"
+                       maxlength="10" required
                        id="cep"
                        class="form-control" ng-model="cep" ng-keypress="enter($event)">
-                <span class="error" ng-show="userForm.cep.$error.required"> Campo requerido! </span>
             </div>
             <div class="form-group  col-md-2">
                 <button class="btn btn-primary" ng-click="busca()">Buscar</button>
@@ -104,17 +98,13 @@
                 <label class="control-label">
                     Logradouro:
                 </label>
-                <input type="text" class="form-control" ng-model="local_encontrado.logradouro" />
-
-
-
-
+                <input only-letters-input type="text" class="form-control" ng-model="local_encontrado.logradouro" required/>
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">
                     Bairro:
                 </label>
-                <input type="text" class="form-control" ng-model="local_encontrado.bairro" />
+                <input only-letters-input type="text" class="form-control" ng-model="local_encontrado.bairro" required/>
             </div>
         </div>
         <div class="row">
@@ -122,14 +112,14 @@
                 <label class="control-label">
                     Cidade:
                 </label>
-                <input type="text" class="form-control" ng-model="local_encontrado.cidade" />
+                <input only-letters-input type="text" class="form-control" ng-model="local_encontrado.cidade" required/>
 
             </div>
             <div class="form-group col-md-1">
                 <label class="control-label">
                     Estado:
                 </label>
-                <input type="text" class="form-control" ng-model="local_encontrado.estado" />
+                <input type="text" class="form-control" ng-model="local_encontrado.estado" required />
 
             </div>
         </div>
@@ -137,20 +127,23 @@
             <div class="form-group  col-md-7">
                 <label class="control-label">
                     Curriculo:
+                    <input type="file" ng-model="curriculo" file-model="arquivo" accept="application/pdf,application/msword,
+                                application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
                 </label>
-                <input ng-model="curriculum" type="file" name="myFile" accept="application/pdf,application/msword,
-  application/vnd.openxmlformats-officedocument.wordprocessingml.document" file-upload />
+         
+               
 
-                <label>
-                    Somente serão aceitos arquivos no formato PDF, DOC e DOCX.
-                </label>
 
-            </div>
+                <div class="error" ng-if="mensagem">{{ mensagem }}</div>
+                    </div>
+
+
+            
+      
         </div>
         <div class="row">
             <div class="form-group  col-md-7">
-
-                <input type="button" class="btn btn-primary" value="Enviar" data-ng-click="save()" />
+                <input type="submit" class="btn btn-primary" value="Enviar" ng-disabled="userForm.$invalid" />
             </div>
         </div>
     </form>
@@ -163,6 +156,6 @@
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular-resource.min.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/CadastroController.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/MascaraValidacao.js")"></script>
-
+        <script type="text/javascript" src="@Url.Content("~/bower_components/angular-guid/guid.js")"></script>
     }
 </div>

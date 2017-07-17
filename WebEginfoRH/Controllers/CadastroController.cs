@@ -1,13 +1,21 @@
 ﻿using System;
+
+using System.Net.Http;
+
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebEginfoRH.Models;
+using System.Text;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Configuration;
 
 namespace WebEginfoRH.Controllers
 {
@@ -55,13 +63,149 @@ namespace WebEginfoRH.Controllers
             };
             return perfis;
         }
+
         [HttpPost]
-        public void Upload(System.Web.HttpPostedFileBase aFile)
+        public ContentResult Upload(HttpPostedFileBase file)
         {
-            string file = aFile.FileName;
-            string path = Server.MapPath("../Upload//");
-            aFile.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
+            var filename = Path.GetFileName(file.FileName);
+            var path = Path.Combine(Server.MapPath("~/Upload"), filename);
+            file.SaveAs(path);
+
+            return new ContentResult
+            {
+                ContentType = "text/plain",
+                Content = filename,
+                ContentEncoding = Encoding.UTF8
+            };
         }
+
+        [HttpPost]
+        public void UploadFile(System.Web.HttpPostedFileBase file1)
+        {
+            string file = file1.FileName;
+            string path = Server.MapPath("~//Upload//");
+            file1.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
+        }
+        [HttpPost]
+        public void FileUpload()
+        {
+            HttpPostedFileBase arquivo = Request.Files[0];
+            int id = Convert.ToInt32(Request.Form[0]);
+            Candidato candidato = new Candidato();            
+            string nome = Request.Form[1].ToString();
+            string celular = Request.Form[2].ToString();
+            string email = Request.Form[3].ToString();
+            int idPerfil = Convert.ToInt32(Request.Form[4]);
+            //ICollection<int> especialida = Request.Form[5].ToList();
+            candidato.nome = nome;
+            candidato.celular = celular;
+            candidato.email = email;
+            candidato.idPerfil = idPerfil;
+            var especialidade = Request.Form[5].Split(',').Select(s => Int32.Parse(s));
+            if (arquivo.ContentLength > 0 && (arquivo.FileName.Split('.')[1].ToUpper() == "PDF" || arquivo.FileName.Split('.')[1].ToUpper() == "DOC" || arquivo.FileName.Split('.')[1].ToUpper() == "DOCX"))
+            {
+                string nomeArquivoGuid = Guid.NewGuid() + "." + arquivo.FileName.Split('.')[1];
+
+                var uploadPath = Server.MapPath("~/Upload");
+                string caminhoArquivo = Path.Combine(@uploadPath, Path.GetFileName(nomeArquivoGuid));
+                arquivo.SaveAs(caminhoArquivo);
+                var candidatoUpdate = db.Candidatos.Find(id);
+                if (candidatoUpdate != null)
+                {
+                    candidatoUpdate.curriculo = nomeArquivoGuid;
+                    db.Candidatos.Attach(candidatoUpdate);
+                    var entry = db.Entry(candidatoUpdate);
+                    entry.Property(e => e.curriculo).IsModified = true;
+                    db.SaveChanges();
+
+
+                    var getValue = ConfigurationManager.AppSettings["emailVaga"];
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(getValue);
+                    mail.From = new MailAddress("rhvagas@eginfo.com.br");
+                    mail.Subject = "EGinfo -Cadastro de Candidato - Curriculo";
+                    string Body = createEmailBody(candidato, especialidade);
+                    mail.Body = Body;
+                    mail.IsBodyHtml = true;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "email-ssl.com.br";
+                    smtp.Port = 587;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new System.Net.NetworkCredential
+                    ("rhvagas@eginfo.com.br", "eginfo01");
+                    Attachment attachment = new Attachment(caminhoArquivo, MediaTypeNames.Application.Octet);
+                    ContentDisposition disposition = attachment.ContentDisposition;
+                    disposition.FileName = Path.GetFileName(caminhoArquivo);
+                    disposition.Size = new FileInfo(caminhoArquivo).Length;
+                    disposition.DispositionType = DispositionTypeNames.Attachment;
+                    mail.Attachments.Add(attachment);
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                    smtp.Dispose();
+                }
+            }
+
+            else
+            {
+                throw new Exception("Arquivo inválido");
+            }
+        }
+
+
+
+        private string createEmailBody(Candidato candidato, IEnumerable<int> especialidade)
+        {
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(Server.MapPath("~/Views/Template/HtmlTemplate.html")))
+            {
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("{candidato}", candidato.nome);
+            body = body.Replace("{telefone}", candidato.celular);
+            body = body.Replace("{email}", candidato.email);
+            body = body.Replace("{perfil}", ObterPerfil(candidato.idPerfil));
+
+            var lista = (from d in db.Especialidades.ToList()
+                        join e in especialidade on d.id equals e
+                        select d.nome).ToList();
+
+            string result = String.Join(", ", lista);
+            body = body.Replace("{especialidades}", result.ToString());
+            return body;
+        }
+
+        [HttpPost]
+        public void EnviarEmail(Candidato candidato, ICollection<int> especialidade, Endereco endereco, string arquivoTo)
+        {
+           
+            var uploadPath = Server.MapPath("~/Upload");
+            string caminhoArquivo = Path.Combine(@uploadPath, Path.GetFileName(arquivoTo));
+            var getValue = ConfigurationManager.AppSettings["emailVaga"];
+            MailMessage mail = new MailMessage();
+            mail.To.Add(getValue);
+            mail.From = new MailAddress("rhvagas@eginfo.com.br");
+            mail.Subject = "EGinfo -Cadastro de Candidato - Curriculo";
+            string Body = createEmailBody(candidato, especialidade);
+            mail.Body = Body;
+            mail.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = "email-ssl.com.br";
+            smtp.Port = 587;
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new System.Net.NetworkCredential
+            ("rhvagas@eginfo.com.br", "eginfo01");
+            Attachment attachment = new Attachment(caminhoArquivo, MediaTypeNames.Application.Octet);
+            ContentDisposition disposition = attachment.ContentDisposition;
+            disposition.FileName = Path.GetFileName(caminhoArquivo);
+            disposition.Size = new FileInfo(caminhoArquivo).Length;
+            disposition.DispositionType = DispositionTypeNames.Attachment;
+            mail.Attachments.Add(attachment);
+            smtp.EnableSsl = true;
+            smtp.Send(mail);
+            smtp.Dispose();
+        }
+
+     
         [HttpPost]
         public int Salvar(Candidato candidato, ICollection<int> especialidade, Endereco endereco)
         {
@@ -72,14 +216,33 @@ namespace WebEginfoRH.Controllers
             var xpto = (from d in db.Especialidades.ToList()
                         join e in especialidade on d.id equals e
                         select d).ToList();
-
+  
             candidato.idEndereco = idEndereco;
             candidato.Especialidades = xpto;
             db.Candidatos.Add(candidato);
             db.SaveChanges();
-
+            
             return candidato.id;
 
+        }
+
+        public string ObterPerfil(int? id)
+        {
+            string nome = string.Empty;
+            switch (id)
+            {
+                case 1:
+                    nome = "Sênior";
+                    break;
+                case 2:
+                    nome = "Pleno";
+                    break;
+                default:
+                    nome = "Júnior";
+                    break;
+            }
+
+            return nome;
         }
         protected override void Dispose(bool disposing)
         {

@@ -119,11 +119,11 @@ namespace WebEginfoRH.Controllers
             return perfis;
         }
         [HttpPost]
-        public void Upload(System.Web.HttpPostedFileBase aFile)
+        public void Upload(System.Web.HttpPostedFileBase payload)
         {
-            string file = aFile.FileName;
+            string file = payload.FileName;
             string path = Server.MapPath("../Upload//");
-            aFile.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
+            payload.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
         }
          [HttpPost]
         public int Salvar(Candidato candidato, ICollection<int> especialidade, Endereco endereco)

@@ -187,6 +187,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bower_components\angular-guid\.gitignore" />
+    <Content Include="bower_components\angular-guid\guid.js" />
+    <Content Include="bower_components\angular-guid\guid.min.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -226,6 +229,10 @@
     <Content Include="Models\RHModel.edmx.diagram">
       <DependentUpon>RHModel.edmx</DependentUpon>
     </Content>
+    <Content Include="bower_components\angular-guid\.bower.json" />
+    <Content Include="bower_components\angular-guid\bower.json" />
+    <Content Include="bower_components\angular-guid\LICENSE" />
+    <Content Include="bower_components\angular-guid\README.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -239,6 +246,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Views\Template\htmlTemplate.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

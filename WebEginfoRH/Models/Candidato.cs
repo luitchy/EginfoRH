@@ -23,7 +23,7 @@ namespace WebEginfoRH.Models
         public string senha { get; set; }
         public Nullable<int> idPerfil { get; set; }       
         public int idEndereco { get; set; }
-        public string curriculum { get; set; }
+        public string curriculo { get; set; }
         public virtual ICollection<Especialidade> Especialidades { get; set; }
         [ForeignKey("idEndereco")]
         public virtual Endereco Endereco { get; set; }

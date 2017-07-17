@@ -31,6 +31,13 @@ function MascaraTelefone(tel) {
     return formataCampo(tel, '(00) 0000-0000', event);
 }
 
+function MascaraCelular(tel) {
+    if (mascaraInteiro(tel) == false) {
+        event.returnValue = false;
+    }
+    return formataCampo(tel, '(00) 00000-0000', event);
+}
+
 //adiciona mascara ao CPF
 function MascaraCPF(cpf) {
     if (mascaraInteiro(cpf) == false) {
