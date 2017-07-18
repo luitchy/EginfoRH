@@ -27,5 +27,9 @@ namespace WebEginfoRH.Models
     
         public virtual DbSet<tb_Candidato> tb_Candidato { get; set; }
         public virtual DbSet<tb_Especialidade> tb_Especialidade { get; set; }
+
+        public System.Data.Entity.DbSet<WebEginfoRH.Models.Candidato> Candidatoes { get; set; }
+
+        public System.Data.Entity.DbSet<WebEginfoRH.Models.Endereco> Enderecoes { get; set; }
     }
 }

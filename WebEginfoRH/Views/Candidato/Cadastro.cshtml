@@ -21,8 +21,9 @@
                 <label for="cpf" class="control-label">
                     CPF (*) :
                 </label>
-                <input type="text" class="form-control" id="cpf" onBlur="ValidarCPF(userForm.cpf);"
-                       onKeyPress="MascaraCPF(userForm.cpf);" maxlength="14" ng-model="cpf" required />
+                <input type="text" ui-br-cpf-mask class="form-control" id="cpf" 
+                         ng-model="cpf" required />
+                <span class="error"  ng-show="(userForm.$dirty||submitted)&&userForm.$error.cpf"> CPF inválido</span>
             </div>
             <div class="form-group col-md-3">
                 <label for="email" class="control-label">
@@ -152,10 +153,10 @@
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-        <script type="text/javascript" src="@Url.Content("~/Scripts/angular-route.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/angular-route.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular-resource.min.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/CadastroController.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/MascaraValidacao.js")"></script>
-        <script type="text/javascript" src="@Url.Content("~/bower_components/angular-guid/guid.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/bower_components/angular-input-masks/angular-input-masks-standalone.min.js")"></script>
     }
 </div>

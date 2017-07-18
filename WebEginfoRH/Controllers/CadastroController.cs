@@ -47,9 +47,6 @@ namespace WebEginfoRH.Controllers
                 perfis.Add(new System.Web.Mvc.SelectListItem { Text = "Pleno", Value = "3" });
                 perfis.Add(new System.Web.Mvc.SelectListItem { Text = "Junior", Value = "4" });
             };
-
-            //  var ret = db.LocationTbls.Select(x => new { x.Id, x.LocName }).ToList();
-
             return Json(perfis, JsonRequestBehavior.AllowGet);
         }
         public IEnumerable<System.Web.Mvc.SelectListItem> Get()
@@ -63,29 +60,7 @@ namespace WebEginfoRH.Controllers
             };
             return perfis;
         }
-
-        [HttpPost]
-        public ContentResult Upload(HttpPostedFileBase file)
-        {
-            var filename = Path.GetFileName(file.FileName);
-            var path = Path.Combine(Server.MapPath("~/Upload"), filename);
-            file.SaveAs(path);
-
-            return new ContentResult
-            {
-                ContentType = "text/plain",
-                Content = filename,
-                ContentEncoding = Encoding.UTF8
-            };
-        }
-
-        [HttpPost]
-        public void UploadFile(System.Web.HttpPostedFileBase file1)
-        {
-            string file = file1.FileName;
-            string path = Server.MapPath("~//Upload//");
-            file1.SaveAs(path + Guid.NewGuid() + "." + file.Split('.')[1]);
-        }
+       
         [HttpPost]
         public void FileUpload()
         {
@@ -101,10 +76,16 @@ namespace WebEginfoRH.Controllers
             candidato.celular = celular;
             candidato.email = email;
             candidato.idPerfil = idPerfil;
+            List<string> lista = new List<string>();
+            lista.Add(".PDF");
+            lista.Add(".DOC");
+            lista.Add(".DOCX");
+
+            var match = lista.FirstOrDefault(stringToCheck => stringToCheck.Contains(Path.GetExtension(arquivo.FileName).ToUpper()));
             var especialidade = Request.Form[5].Split(',').Select(s => Int32.Parse(s));
-            if (arquivo.ContentLength > 0 && (arquivo.FileName.Split('.')[1].ToUpper() == "PDF" || arquivo.FileName.Split('.')[1].ToUpper() == "DOC" || arquivo.FileName.Split('.')[1].ToUpper() == "DOCX"))
+            if ((arquivo.ContentLength < 4096 * 1024) && (match != null))
             {
-                string nomeArquivoGuid = Guid.NewGuid() + "." + arquivo.FileName.Split('.')[1];
+                string nomeArquivoGuid = Guid.NewGuid() + "." + Path.GetExtension(arquivo.FileName);
 
                 var uploadPath = Server.MapPath("~/Upload");
                 string caminhoArquivo = Path.Combine(@uploadPath, Path.GetFileName(nomeArquivoGuid));
@@ -117,8 +98,6 @@ namespace WebEginfoRH.Controllers
                     var entry = db.Entry(candidatoUpdate);
                     entry.Property(e => e.curriculo).IsModified = true;
                     db.SaveChanges();
-
-
                     var getValue = ConfigurationManager.AppSettings["emailVaga"];
                     MailMessage mail = new MailMessage();
                     mail.To.Add(getValue);
@@ -132,7 +111,7 @@ namespace WebEginfoRH.Controllers
                     smtp.Port = 587;
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new System.Net.NetworkCredential
-                    ("rhvagas@eginfo.com.br", "eginfo01");
+                    ("xxxx@xxxxxx.com.br", "xxxxxxx");
                     Attachment attachment = new Attachment(caminhoArquivo, MediaTypeNames.Application.Octet);
                     ContentDisposition disposition = attachment.ContentDisposition;
                     disposition.FileName = Path.GetFileName(caminhoArquivo);
@@ -144,7 +123,6 @@ namespace WebEginfoRH.Controllers
                     smtp.Dispose();
                 }
             }
-
             else
             {
                 throw new Exception("Arquivo inválido");
@@ -173,7 +151,7 @@ namespace WebEginfoRH.Controllers
             body = body.Replace("{especialidades}", result.ToString());
             return body;
         }
-
+        /*
         [HttpPost]
         public void EnviarEmail(Candidato candidato, ICollection<int> especialidade, Endereco endereco, string arquivoTo)
         {
@@ -204,7 +182,7 @@ namespace WebEginfoRH.Controllers
             smtp.Send(mail);
             smtp.Dispose();
         }
-
+        */
      
         [HttpPost]
         public int Salvar(Candidato candidato, ICollection<int> especialidade, Endereco endereco)

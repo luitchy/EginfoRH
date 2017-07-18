@@ -1,6 +1,6 @@
-﻿var app = angular.module("candidatosApp", ['ui.utils.masks']);
+﻿var app = angular.module("consultaApp", []);
 
-app.controller("CadastroController", function ($scope, $http) {
+app.controller("ConsultaController", function ($scope, $http) {
 
     function busca() {
         if ($scope.cep == undefined) {
@@ -29,96 +29,44 @@ app.controller("CadastroController", function ($scope, $http) {
             $scope.busca();
         };
     };
-    $scope.mostrarmsg = false;
-    $scope.save = function () {
-        if ($scope.arquivo == undefined) {
-            $scope.mensagem = " Por favor seleccione arquivo, Somente serão aceitos arquivos no formato PDF, DOC e DOCX.";
-            return;
-        }
-        var Candidato = {
-            nome: $scope.nome,
-            cpf: $scope.cpf,
-            telefone: $scope.telefone,
-            celular: $scope.celular,
-            email: $scope.email,
-            idPerfil: $scope.idPerfil,
-            curriculo: $scope.arquivo.name
-        };
-        var Endereco = {
-            cep: $scope.cep,
-            logradouro: $scope.local_encontrado.logradouro,
-            bairro: $scope.local_encontrado.bairro,
-            cidade: $scope.local_encontrado.cidade,
-            estado: $scope.local_encontrado.estado,
-            numero: $scope.local_encontrado.numero
-        }
+    $scope.candidatos = [];
+    $scope.buscar = function () {
+        
         $scope.id = 0;
-        var Indata = { candidato: Candidato, especialidade: $scope.especialidadeSelecionada, endereco: Endereco }
+        var Indata = { idPerfil: $scope.idPerfil, especialidade: $scope.especialidadeSelecionada }
         $http({
             method: 'POST',
-            url: '/Cadastro/Salvar',
+            url: '/Consulta/Buscar',
             data: Indata
         }).then(function (response) {
             if (response.statusText == "OK") {
-
-                if ($scope.arquivo.name.toUpperCase().split('.').pop() == "DOC" ||
-                    $scope.arquivo.name.toUpperCase().split('.').pop() == "DOCX" ||
-                    $scope.arquivo.name.toUpperCase().split('.').pop() == "PDF") {
-                    var file = $scope.arquivo;
-                    var idCandidato = response.data;
-                    var candidato = Candidato;
-                    var especialidade = $scope.especialidadeSelecionada;
-                    console.log('file is ');
-                    console.dir(file);
-                    var uploadUrl = "/Cadastro/FileUpload";
-                    var fd = new FormData();
-                    fd.append('file', file);
-                    fd.append('idCandidato', idCandidato);
-                    fd.append('candidatoNome', Candidato.nome);
-                    fd.append('candidatoCelular', Candidato.celular);
-                    fd.append('candidatoEmail', Candidato.email);
-                    fd.append('candidatoIdPerfil', Candidato.idPerfil);
-                    fd.append('especialidade', especialidade);
-                    $http.post(uploadUrl, fd, {
-                        transformRequest: angular.identity,
-                        headers: { 'Content-Type': undefined }
-                    }).then(function (response) {
-                        if (response.statusText == "OK") {
-                            $scope.mensagem = "E-mail enviado com sucesso!";
-                            window.location.reload();
-                            /* var InEmail = { candidato: Candidato, especialidade: $scope.especialidadeSelecionada, arquivoTo: $scope.arquivo.name }
-                             $http({
-                                 method: 'POST',
-                                 url: '/Cadastro/EnviarEmail',
-                                 data: InEmail
-                             }).then(function (response) {
-                                 if (response.statusText == "OK") {
-                                     window.location.reload();
-                                 }
-                             }).catch(function (e) {
-                                 // handle errors in processing or in error.
-     
-                             })*/
-                        }
-                    }).catch(function (e) {
-                        $scope.mensagem = "Erro no envio do E-mail ";
-
-                    });
-                }
-
-                else {
-                    $scope.mensagem = "Somente serão aceitos arquivos no formato PDF, DOC e DOCX.";
-                }
+                $scope.candidatos = response.data;
             }
         }).catch(function (data, status) {
             $scope.mensagem = "Erro no cadastro";
         })
     };
 
+   
+
+    $scope.getExportFiles = function (fileKey) {
+        var req = exportSyncFileReq;
+        req.params.fileKey = fileKey;
+        var data = RESTCaller.getConfig(req);
+        data.then(function (result) {
+            if (result) {
+                var link = document.createElement('a');
+                //link.download = 'filename.ext';
+                link.href = result;
+                link.click();
+            }
+        })
+    }
+
     $scope.perfis = [];
     $scope.especialidades = [];
 
-    $http.get('/Candidato/GetPerfil/').then(successCallback, errorCallback);
+    $http.get('/Consulta/GetPerfil/').then(successCallback, errorCallback);
     function successCallback(response) {
         $scope.perfis = response.data;//success code
     }
@@ -126,7 +74,7 @@ app.controller("CadastroController", function ($scope, $http) {
         //error code
     }
 
-    $http.get('/Candidato/GetEspecialidade/').then(successCallback, errorCallback);
+    $http.get('/Consulta/GetEspecialidade/').then(successCallback, errorCallback);
     function successCallback(response1) {
         $scope.especialidades = response1.data;//success code
     }
@@ -147,7 +95,7 @@ app.controller("CadastroController", function ($scope, $http) {
     };
 
     //teste
-    $scope.perfis1 = [["1", "Sênior"], ["2", "Pleno"], ["3", "Júnior"]];
+    $scope.perfis1 = [["0", "TODOS"], ["1", "Sênior"], ["2", "Pleno"], ["3", "Júnior"]];
 
     $scope.$on("fileSelected", function (event, args) {
         $scope.$apply(function () {

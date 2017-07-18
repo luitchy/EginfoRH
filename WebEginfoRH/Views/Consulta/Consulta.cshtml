@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Consulta";
+}
+<div ng-app="consultaApp" ng-controller="ConsultaController">
+
+    <form name="userForm" ng-submit="buscar()">
+        <div class="panel panel-default" style="background: none;">
+            <div class="panel-heading">
+                <h4 class="h4">
+                    Buscar
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-lg-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Perfil : </span>
+                        <select class="form-control" id="perfil" ng-model="idPerfil">
+
+                            <option ng-repeat="item in perfis1" value="{{item[0]}}">{{item[1]}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="input-group">
+                        <span class="input-group-addon">Especialidades :</span>
+                        <label ng-repeat="x in especialidades">
+                            <input type="checkbox" name="idespecialidade"
+                                   ng-model="x.checked"
+                                   ng-checked="especialidadeSelecionada.indexOf(x.id) > -1"
+                                   ng-required="especialidadeSelecionada.length==0"
+                                   ng-click="toggleSelection(x.id)" value="{{x.id}}"> {{x.nome}}
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group  col-md-1">
+                        <input type="submit" class="btn btn-primary" value="Buscar" ng-disabled="userForm.$invalid" />
+                    </div>
+                </div>
+            </div>
+
+
+            <table class="table table-striped">
+                <tr ng-repeat="candidato in candidatos">
+                    <td> {{candidato.Nome}} </td>
+                    <td> {{candidato.Celular}} </td>
+                    <td> {{candidato.Email}} </td>
+                    <td> {{candidato.EnderecoCidade}} </td>
+                    <td> <a href="{{candidato.CaminhoCurriculo}}" download="{{candidato.Curriculo}} " > {{candidato.Curriculo}} </a></td>
+                </tr>
+            </table>
+
+        </div>
+        </form>
+
+    @section scripts{
+        <script type="text/javascript" src="@Url.Content("~/Scripts/angular.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/angular-route.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/angular-resource.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/ConsultaController.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/MascaraValidacao.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/bower_components/angular-input-masks/angular-input-masks-standalone.min.js")"></script>
+    }
+    </div>

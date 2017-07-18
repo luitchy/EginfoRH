@@ -152,6 +152,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CadastroController.cs" />
     <Compile Include="Controllers\CandidatoController.cs" />
+    <Compile Include="Controllers\ConsultaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Global.asax.cs">
@@ -190,6 +191,20 @@
     <Content Include="bower_components\angular-guid\.gitignore" />
     <Content Include="bower_components\angular-guid\guid.js" />
     <Content Include="bower_components\angular-guid\guid.min.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks-debug.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks-debug.min.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks-dependencies.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks-dependencies.min.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks-standalone.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks-standalone.min.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.br.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.br.min.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.ch.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.ch.min.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.min.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.us.js" />
+    <Content Include="bower_components\angular-input-masks\angular-input-masks.us.min.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -213,6 +228,7 @@
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\ConsultaController.js" />
     <Content Include="Scripts\CadastroController.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -233,6 +249,10 @@
     <Content Include="bower_components\angular-guid\bower.json" />
     <Content Include="bower_components\angular-guid\LICENSE" />
     <Content Include="bower_components\angular-guid\README.md" />
+    <Content Include="bower_components\angular-input-masks\.bower.json" />
+    <Content Include="bower_components\angular-input-masks\bower.json" />
+    <Content Include="bower_components\angular-input-masks\LICENSE" />
+    <Content Include="bower_components\angular-input-masks\README.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -264,6 +284,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Cadastro\Cadastro.cshtml" />
+    <Content Include="Views\Consulta\Consulta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
