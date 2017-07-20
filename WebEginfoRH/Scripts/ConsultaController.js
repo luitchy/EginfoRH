@@ -1,6 +1,6 @@
-﻿var app = angular.module("consultaApp", []);
+﻿var app = angular.module('consultaApp', ['ngFileSaver']);
 
-app.controller("ConsultaController", function ($scope, $http) {
+app.controller("ConsultaController", function ($scope, $http, FileSaver) {
 
     function busca() {
         if ($scope.cep == undefined) {
@@ -46,22 +46,124 @@ app.controller("ConsultaController", function ($scope, $http) {
             $scope.mensagem = "Erro no cadastro";
         })
     };
+    
+    $scope.downloadFile1 = function (name) {
+        var s = "http://localhost:12245/Consulta/DownloadFile1?FileName="
+             + name;
+        window.open(s);  
 
-   
-
-    $scope.getExportFiles = function (fileKey) {
-        var req = exportSyncFileReq;
-        req.params.fileKey = fileKey;
-        var data = RESTCaller.getConfig(req);
-        data.then(function (result) {
-            if (result) {
-                var link = document.createElement('a');
-                //link.download = 'filename.ext';
-                link.href = result;
-                link.click();
-            }
-        })
     }
+    $scope.downloadFile = function (name) {
+        $http({
+            method: 'GET',
+            url: '/Consulta/Download?FileName=' + name,
+            //params: { FileName: name },
+            responseType: 'arraybuffer'
+        }).then(function (response) {
+            //if (response.statusText == "OK") {
+                //var headers = headers();
+
+               // var filename = headers['x-filename'];
+               // var contentType = headers['content-type'];
+
+            var linkElement = document.createElement('a');
+            if (typeof response.data === 'object') {
+                var data = JSON.stringify(response, undefined, 2);
+            }
+            var byteArray = new Uint8Array(response.data);
+            //var byteCharacters = atob(response.data);
+            //var byteCharacters = atob(response.data);
+            try {
+                var blob = new Blob([byteArray], { type: 'application/octet-stream' });
+                var blobUrl = URL.createObjectURL(blob);
+                FileSaver.saveAs(blob, name);
+
+                /*var xhr = new XMLHttpRequest;
+                xhr.responseType = 'blob';
+
+                xhr.onload = function () {
+                    var recoveredBlob = xhr.response;
+
+                    var reader = new FileReader;
+
+                    reader.onload = function () {
+                        var blobAsDataUrl = reader.result;
+                        window.location = blobAsDataUrl;
+                    };
+
+                    reader.readAsDataURL(recoveredBlob);
+                     linkElement.setAttribute("download", name);
+
+                      var clickEvent = new MouseEvent("click", {
+                          "view": window,
+                          "bubbles": true,
+                          "cancelable": false
+                      });
+                      linkElement.dispatchEvent(clickEvent);
+                    //var fileURL = URL.createObjectURL(blob);
+                    //var fileURL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+                    //var url = fileURL.createObjectURL(blob);
+                    //window.open(fileURL);
+
+                };
+
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(blob);
+                }
+                else {
+                    var e = document.createEvent('MouseEvents'),
+                        a = document.createElement('a');
+
+                    a.download = name;
+                    a.href = window.URL.createObjectURL(blob);
+                    a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+                    e.initEvent('click', true, false, window,
+                        0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                    a.dispatchEvent(e);
+                }
+
+                 xhr.open('GET', blobUrl);
+                 xhr.send();*/
+
+
+                /*   var url = URL.createObjectURL(blob);
+
+                   linkElement.setAttribute('href', url);
+                   linkElement.setAttribute("download", name);
+
+                  var clickEvent = new MouseEvent("click", {
+                       "view": window,
+                       "bubbles": true,
+                       "cancelable": false
+                   });
+                   linkElement.dispatchEvent(clickEvent);*/
+                //var fileURL = URL.createObjectURL(blob);
+                //var fileURL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+                //var url = fileURL.createObjectURL(blob);
+                //window.open(fileURL);
+                /*
+                linkElement.setAttribute('href', fileURL);
+
+                // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
+                linkElement.setAttribute("download", response.config.params.FileName);
+
+                // Simulate clicking the download link
+                var event = document.createEvent('MouseEvents');
+                event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+                linkElement.dispatchEvent(event);
+               /* linkElement.href = fileURL;
+                linkElement.download = name;
+                linkElement.click();
+                (window.URL || window.webkitURL).revokeObjectURL(blob);
+                $scope.content = $sce.trustAsResourceUrl(fileURL);*/
+            } catch (ex) {
+                console.log(ex);
+            }
+            //}
+        }).catch(function (data, status) {
+            $scope.mensagem = "Erro no cadastro";
+        })
+    };
 
     $scope.perfis = [];
     $scope.especialidades = [];

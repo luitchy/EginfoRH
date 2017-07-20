@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
 using WebEginfoRH.Models;
@@ -27,7 +30,88 @@ namespace WebEginfoRH.Controllers
             var candidatoes = db.Candidatos.Include(c => c.Endereco);
             return View(candidatoes.ToList());
         }
+        [HttpGet]
+        public HttpResponseMessage DownLoadFile(string FileName)
+        {
 
+            if (FileName != null)
+            {
+                var downloadPath = Server.MapPath("~/Upload");
+                string filePath = Path.Combine(downloadPath, Path.GetFileName(FileName));
+                //string caminhoArquivo = Path.GetFullPath(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.InternetCache), FileName));
+                /*   FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                   BinaryReader br = new BinaryReader(fs);
+                   bytes = br.ReadBytes((Int32)fs.Length);
+                   br.Close();
+                   fs.Close();*/
+                /*HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+                System.IO.MemoryStream stream = new MemoryStream(bytes);
+                result.Content = new StreamContent(stream);
+                result.Content.Headers.Add("x-filename", FileName);
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = FileName
+                };
+                return (result);*/
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        byte[] bytes = new byte[file.Length];
+                        file.Read(bytes, 0, (int)file.Length);
+                        ms.Write(bytes, 0, (int)file.Length);
+
+                        HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
+                        httpResponseMessage.Content = new ByteArrayContent(bytes.ToArray());
+                        httpResponseMessage.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                        httpResponseMessage.Content.Headers.ContentDisposition.FileName = FileName;
+                        httpResponseMessage.Content.Headers.Add("x-filename", FileName);
+                        httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");                        
+                        httpResponseMessage.StatusCode = HttpStatusCode.OK;
+                        return httpResponseMessage;
+                    }
+                }
+            }
+            return null;
+        }
+
+        [HttpGet]
+        public FileResult Download(string FileName)
+        {
+            var downloadPath = Server.MapPath("~/Upload");
+            string filePath = Path.Combine(downloadPath, Path.GetFileName(FileName));
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, FileName);
+        }
+
+
+        [HttpGet]
+        public HttpResponseMessage DownLoadFile1(string FileName)
+        {
+            Byte[] bytes = null;
+            if (FileName != null)
+            {
+                var downloadPath = Server.MapPath("~/Upload");
+                string filePath = Path.Combine(downloadPath, Path.GetFileName(FileName));
+                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
+                bytes = br.ReadBytes((Int32)fs.Length);
+                br.Close();
+                fs.Close();
+            }
+
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            System.IO.MemoryStream stream = new MemoryStream(bytes);
+            result.Content = new StreamContent(stream);
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = FileName
+            };
+            return (result);
+        }
         public JsonResult Buscar(int idPerfil, IEnumerable<int> especialidade)
         {
             EGINFORHContext db = new EGINFORHContext();
@@ -43,7 +127,7 @@ namespace WebEginfoRH.Controllers
                  Nome = c.nome,
                  Celular = c.celular,
                  Email = c.email,
-                 CaminhoCurriculo = uploadPath,
+                 CaminhoCurriculo = uploadPath + c.curriculo,
                  Curriculo = c.curriculo,
                  EnderecoCidade = c.Endereco.cidade,
                  IdPerfil = c.idPerfil

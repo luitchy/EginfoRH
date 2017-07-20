@@ -1,6 +1,28 @@
 ﻿@{
     ViewBag.Title = "Consulta";
 }
+
+<head>
+    <script type="text/javacript">
+        function saveFile(url) {
+        // Get file name from url.
+        var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = function() {
+        var a = document.createElement('a');
+        a.href = window.URL.createObjectURL(xhr.response); // xhr.response is a blob
+        a.download = filename; // Set the file name.
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        delete a;
+        };
+        xhr.open('GET', url);
+        xhr.send();
+        }
+    </script>
+    </head>
 <div ng-app="consultaApp" ng-controller="ConsultaController">
 
     <form name="userForm" ng-submit="buscar()">
@@ -46,13 +68,17 @@
                     <td> {{candidato.Celular}} </td>
                     <td> {{candidato.Email}} </td>
                     <td> {{candidato.EnderecoCidade}} </td>
-                    <td> <a href="{{candidato.CaminhoCurriculo}}" download="{{candidato.Curriculo}} " > {{candidato.Curriculo}} </a></td>
+                    <td><a ng-click="downloadFile(candidato.Curriculo)" >{{candidato.Curriculo}} </a></td>
+
+                    
                 </tr>
             </table>
-
         </div>
-        </form>
 
+
+        <embed ng-src="{{content}}" style="width:200px;height:200px;" />
+        </form>
+   
     @section scripts{
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.js")"></script>
@@ -62,5 +88,6 @@
         <script type="text/javascript" src="@Url.Content("~/Scripts/ConsultaController.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/MascaraValidacao.js")"></script>
         <script type="text/javascript" src="@Url.Content("~/bower_components/angular-input-masks/angular-input-masks-standalone.min.js")"></script>
-    }
+        <script type="text/javascript" src="@Url.Content("~/bower_components/angular-file-saver/dist/angular-file-saver.bundle.js")"></script>
+  }
     </div>
