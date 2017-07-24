@@ -111,7 +111,7 @@ namespace WebEginfoRH.Controllers
                     smtp.Port = 587;
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new System.Net.NetworkCredential
-                    ("xxxx@xxxxxx.com.br", "xxxxxxx");
+                    ("rhvagas@eginfo.com.br", "eginfo01");
                     Attachment attachment = new Attachment(caminhoArquivo, MediaTypeNames.Application.Octet);
                     ContentDisposition disposition = attachment.ContentDisposition;
                     disposition.FileName = Path.GetFileName(caminhoArquivo);

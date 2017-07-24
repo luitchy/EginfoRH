@@ -112,7 +112,7 @@ namespace WebEginfoRH.Controllers
             };
             return (result);
         }
-        public JsonResult Buscar(int idPerfil, IEnumerable<int> especialidade)
+        public JsonResult Buscar(int idPerfil, IEnumerable<int> especialidade, string cidade)
         {
             EGINFORHContext db = new EGINFORHContext();
             var uploadPath = Server.MapPath("~/Upload/");
@@ -139,9 +139,33 @@ namespace WebEginfoRH.Controllers
             {
                 result = result.Where(c => c.IdPerfil == idPerfil);
             }
+
+
+            if (! string.IsNullOrEmpty(cidade))
+            {
+                result = result.Where(c => c.EnderecoCidade.Contains(cidade));
+            }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        public string ObterPerfil(int? id)
+        {
+            string nome = string.Empty;
+            switch (id)
+            {
+                case 1:
+                    nome = "Sênior";
+                    break;
+                case 2:
+                    nome = "Pleno";
+                    break;
+                default:
+                    nome = "Júnior";
+                    break;
+            }
 
+            return nome;
+        }
         public JsonResult GetEspecialidade()
         {
             EGINFORHContext db = new EGINFORHContext();

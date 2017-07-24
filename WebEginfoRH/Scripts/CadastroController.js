@@ -56,7 +56,7 @@ app.controller("CadastroController", function ($scope, $http) {
         var Indata = { candidato: Candidato, especialidade: $scope.especialidadeSelecionada, endereco: Endereco }
         $http({
             method: 'POST',
-            url: '/Cadastro/Salvar',
+            url: '/Candidato/Salvar',
             data: Indata
         }).then(function (response) {
             if (response.statusText == "OK") {
@@ -70,7 +70,7 @@ app.controller("CadastroController", function ($scope, $http) {
                     var especialidade = $scope.especialidadeSelecionada;
                     console.log('file is ');
                     console.dir(file);
-                    var uploadUrl = "/Cadastro/FileUpload";
+                    var uploadUrl = "/Candidato/FileUpload";
                     var fd = new FormData();
                     fd.append('file', file);
                     fd.append('idCandidato', idCandidato);
@@ -86,19 +86,6 @@ app.controller("CadastroController", function ($scope, $http) {
                         if (response.statusText == "OK") {
                             $scope.mensagem = "E-mail enviado com sucesso!";
                             window.location.reload();
-                            /* var InEmail = { candidato: Candidato, especialidade: $scope.especialidadeSelecionada, arquivoTo: $scope.arquivo.name }
-                             $http({
-                                 method: 'POST',
-                                 url: '/Cadastro/EnviarEmail',
-                                 data: InEmail
-                             }).then(function (response) {
-                                 if (response.statusText == "OK") {
-                                     window.location.reload();
-                                 }
-                             }).catch(function (e) {
-                                 // handle errors in processing or in error.
-     
-                             })*/
                         }
                     }).catch(function (e) {
                         $scope.mensagem = "Erro no envio do E-mail ";
@@ -145,8 +132,7 @@ app.controller("CadastroController", function ($scope, $http) {
             $scope.especialidadeSelecionada.push(especialidade);
         }
     };
-
-    //teste
+    
     $scope.perfis1 = [["1", "Sênior"], ["2", "Pleno"], ["3", "Júnior"]];
 
     $scope.$on("fileSelected", function (event, args) {
@@ -182,30 +168,12 @@ app.directive('fileModel', ['$parse', function ($parse) {
     };
 }]);
 
-app.factory("rfc4122", function () {
-    return {
-        newuuid: function () {
-            // http://www.ietf.org/rfc/rfc4122.txt
-            var s = [];
-            var hexDigits = "0123456789abcdef";
-            for (var i = 0; i < 36; i++) {
-                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-            }
-            s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-            s[8] = s[13] = s[18] = s[23] = "-";
-            return s.join("");
-        }
-    }
-});
 app.directive('fileUpload', function () {
     return {
         scope: true,
         link: function (scope, el, attrs) {
             el.bind('change', function (event) {
                 var files = event.target.files;
-
-                //iterate files since 'multiple' may be specified on the element
                 if (files.length == 0) {
                     scope.$emit("fileSelected", { file: null, field: event.target.name });
                 } else {
@@ -213,13 +181,7 @@ app.directive('fileUpload', function () {
                         var ext = files[i].name.toUpperCase().split('.').pop();
                         // if (ext == "PDF" || ext == "DOCX" || ext == "DOC") {
                         scope.$emit("fileSelected", { file: files[i], field: event.target.name });
-                        //$scope.userForm.$valid = true;
-                        /* } else {
-                             alert('Arquivo inválido');
-                             //scope.$emit("fileSelected", { file: null, field: null });
-                             //return;
-                         }
-                       */
+                       
                     }
                 }
             });
