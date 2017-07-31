@@ -6,157 +6,116 @@
 <div ng-app="candidatosApp" ng-controller="CadastroController">
 
     <form name="userForm" novalidate ng-submit="save()">
-        <div class="row">
-            <label for="nome" class="control-label">
-                Dados Pessoais
+
+        <label for="nome" class="form-control glyphicon-user">
+            Dados do Candidato
+        </label>
+        <br />
+
+        <div class="form-group ">
+            <label for="nome" class="control-label  col-sm-2">
+                Nome (*) :
             </label>
-            </div>
-           
-            
-            <div class="row">
-                <div class="form-group col-md-10">
-                    <!--<label for="nome" class="control-label">
-                     Nome (*) :
-                 </label>-->
-                    <input only-letters-input type="text" class="form-control" id="nome" placeholder="Nombre (*)" ng-model="nome" maxlength="80" required />
-                    <!--<span class="error" ng-show="userForm.nome.$error.required"> Campo requerido! </span> -->
+            <input only-letters-input type="text" class="form-control" id="nome" placeholder="Nombre (*)" ng-model="nome" maxlength="80" required />
+        </div>
+        <div class="form-group">
+            <label for="cpf" class="control-label  col-sm-2">
+                CPF (*) :
+            </label>
+            <input type="text" ui-br-cpf-mask class="form-control" id="cpf" placeholder="CPF (*)"
+                   ng-model="cpf" required />
+            <span class="error" ng-show="(userForm.$dirty||submitted)&&userForm.$error.cpf"> CPF inválido</span>
+        </div>
+        <div class="form-group">
+            <label for="email" class="control-label   col-sm-2">
+                Email (*) :
+            </label>
+            <input type="email" class="form-control" id="email" ng-model="email" placeholder="Email (*)" ng-pattern="emailFormat" required />
+            <span class="error" ng-show="userForm.email.$error.required"> Campo requerido! </span>
+            <span class="error" ng-show="(userForm.$dirty||submitted)&&userForm.$error.email">Email inválido</span>
+        </div>
+        <!--   <div class="form-group">
+            <label for="telefone" class="control-label   col-sm-1">
+                Telefone:
+            </label>
+            <input type="text" class="form-control" id="telefone" maxlength="14" onKeyPress="MascaraTelefone(userForm.telefone);" ng-model="telefone" />
+        </div> -->
+        <div class="form-group">
+            <label for="celular" class="control-label   col-sm-2">
+                Celular (*):
+            </label>
+            <input type="text" class="form-control" id="celular" maxlength="15" placeholder="Celular (*)" onKeyPress="MascaraCelular(userForm.celular);" required ng-model="celular" />
+        </div>
+        <div class="form-inline">
+            <label for="cep" class="control-label   col-sm-2">
+                CEP (*):
+            </label>
+            <input type="text" onKeyPress="MascaraCep(userForm.cep);"
+                   maxlength="10" required
+                   id="cep"
+                   class="form-control" ng-model="cep" placeholder="CEP (*)" ng-keypress="enter($event)">
 
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <!--<label for="cpf" class="control-label">
-                    CPF (*) :
-                </label>-->
-                    <input type="text" ui-br-cpf-mask class="form-control" id="cpf" placeholder="CPF (*)"
-                           ng-model="cpf" required />
-                    <span class="error" ng-show="(userForm.$dirty||submitted)&&userForm.$error.cpf"> CPF inválido</span>
-                </div>
-                <div class="form-group col-md-3">
-                    <!--<label for="email" class="control-label">
-                    Email (*) :
-                </label>-->
-                    <input type="email" class="form-control" id="email" ng-model="email" placeholder="Email (*)" ng-pattern="emailFormat" required />
-                    <span class="error" ng-show="userForm.email.$error.required"> Campo requerido! </span>
-                    <span class="error" ng-show="(userForm.$dirty||submitted)&&userForm.$error.email">Email inválido</span>
-                </div>
-            </div>
-            <div class="row">
-                <!-- <div class="form-group col-md-3">
-                 <label for="telefone" class="control-label">
-                     Telefone:
-                 </label>
-                 <input type="text" class="form-control" id="telefone" maxlength="14" onKeyPress="MascaraTelefone(userForm.telefone);" ng-model="telefone" />
-             </div> -->
-                <div class="form-group col-md-3">
-                    <!--  <label for="celular" class="control-label">
-                    Celular:
-                </label>-->
-                    <input type="text" class="form-control" id="celular" maxlength="15" placeholder="Celular (*)" onKeyPress="MascaraCelular(userForm.celular);" required ng-model="celular" />
-                </div>
+            <button class="btn btn-primary" ng-click="busca()">Buscar</button>
 
-            </div>
-            
-            <!--  <div class="row">
-             <div class="form-group  col-md-2">
-                 <label class="control-label">
-                     CEP (*) :
-                 </label>
-
-             </div>
-         </div> -->
-            <div class="row">
-                <div class="form-group  col-md-2">
-
-                    <input type="text" onKeyPress="MascaraCep(userForm.cep);"
-                           maxlength="10" required
-                           id="cep"
-                           class="form-control" ng-model="cep" placeholder="CEP (*)" ng-keypress="enter($event)">
-                </div>
-                <div class="form-group  col-md-2">
-                    <button class="btn btn-primary" ng-click="busca()">Buscar</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group   col-md-3">
-                    <!--<label class="control-label">
+        </div>
+        <div class="form-inline">
+                <label class="control-label   col-sm-2">
                     Logradouro:
-                </label>-->
-                    <input only-letters-input type="text" class="form-control" placeholder="Logradouro" ng-model="local_encontrado.logradouro" required />
-                </div>
-                <div class="form-group col-md-3">
+                </label>
+                <input only-letters-input type="text" class="form-control  col-sm-3" placeholder="Logradouro" ng-model="local_encontrado.logradouro" required />
 
-                    <input only-letters-input type="text" class="form-control" placeholder="Bairro" ng-model="local_encontrado.bairro" required />
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-3">
-
-                    <input only-letters-input type="text" class="form-control" placeholder="Cidade" ng-model="local_encontrado.cidade" required />
-
-                </div>
-                <div class="form-group col-md-2">
-
-                    <input type="text" class="form-control" placeholder="Estado" ng-model="local_encontrado.estado" required />
-
-                </div>
-            </div>
-        <div class="row">
-            <label class="control-label">
-                Dados Profissionais
+                <label class="control-label  ">
+                    Bairro:   
+                </label>
+                <input only-letters-input type="text" class="form-control" placeholder="Bairro" ng-model="local_encontrado.bairro" required />
+         
+        </div>
+        <div class="form-inline">
+            <label class="control-label   col-sm-2">
+                Cidade:
             </label>
+            <input only-letters-input type="text" class="form-control col-sm-3" placeholder="Cidade" ng-model="local_encontrado.cidade" required />
 
-            </div>
+            <label class="control-label">
+                Estado:    
+            </label>
+            <input type="text" class="form-control" placeholder="Estado" ng-model="local_encontrado.estado" required />
 
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <!-- <label for="perfil" class="control-label">
+        </div>
+            <div class="form-inline">
+                <label for="perfil" class="control-label   col-sm-2">
                     Perfil:
-                </label>-->
-                    <select class="form-control" id="perfil" ng-model="idPerfil" required>
-                        <option value="">-- Seleccione Perfil --</option>
-                        <option ng-repeat="item in perfis" value="{{item[0]}}">{{item[1]}}</option>
-                    </select>
-                </div>
+                </label>
+                <select class="form-control" id="perfil" ng-model="idPerfil" required>
+                    <option value="">-- Seleccione Perfil --</option>
+                    <option ng-repeat="item in perfis" value="{{item[0]}}">{{item[1]}}</option>
+                </select>
             </div>
-            <div class="row">
-                <div class="form-group  col-md-10">
-                    <label class="control-label">
-
-                    </label>
-                    <label ng-repeat="x in especialidades">
-                        <input type="checkbox" name="idespecialidade"
-                               ng-model="x.checked"
-                               ng-checked="especialidadeSelecionada.indexOf(x.id) > -1"
-                               ng-required="especialidadeSelecionada.length==0"
-                               ng-click="toggleSelection(x.id)" value="{{x.id}}"> {{x.nome}}
-                    </label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group  col-md-7">
-                    <label class="control-label">
-                        Curriculo:
-                        <input type="file" ng-model="curriculo" file-model="arquivo" accept="application/pdf,application/msword,
+        <div class="form-inline ">
+            <label class="control-label   col-sm-2">
+                Especialidades:
+            </label>
+            <label ng-repeat="x in especialidades">
+                <input type="checkbox" name="idespecialidade"
+                       ng-model="x.checked"
+                       ng-checked="especialidadeSelecionada.indexOf(x.id) > -1"
+                       ng-required="especialidadeSelecionada.length==0"
+                       ng-click="toggleSelection(x.id)" value="{{x.id}}"> {{x.nome}}
+            </label>
+        </div>
+        <div class="form-group ">
+            <label class="control-label  col-sm-2">
+                Curriculo:
+            </label>
+            <input type="file" ng-model="curriculo" file-model="arquivo" accept="application/pdf,application/msword,
                                 application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-                    </label>
 
-
-
-
-                    <div class="error" ng-if="mensagem">{{ mensagem }}</div>
-                </div>
-
-
-
-
-            </div>
-            <div class="row">
-                <div class="form-group  col-md-7">
-                    <input type="submit" class="btn btn-primary" value="Enviar" ng-disabled="userForm.$invalid" />
-                </div>
-            </div>
-</form>
+            <div class="error" ng-if="mensagem">{{ mensagem }}</div>
+        </div>
+        <div class="form-group  col-sm-2">
+            <input type="submit" class="btn btn-primary" value="Enviar" ng-disabled="userForm.$invalid" />
+        </div>
+    </form>
 
     @section scripts{
         <script type="text/javascript" src="@Url.Content("~/Scripts/angular.js")"></script>

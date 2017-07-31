@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebEginfoRH", "WebEginfoRH\WebEginfoRH.csproj", "{0674AD65-8BE7-451B-9BCE-74FB867C1F63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiEginfo", "WebApiEginfo\WebApiEginfo.csproj", "{2E188BBD-90A8-4790-9867-FFCEBB04166E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0674AD65-8BE7-451B-9BCE-74FB867C1F63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0674AD65-8BE7-451B-9BCE-74FB867C1F63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0674AD65-8BE7-451B-9BCE-74FB867C1F63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E188BBD-90A8-4790-9867-FFCEBB04166E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E188BBD-90A8-4790-9867-FFCEBB04166E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E188BBD-90A8-4790-9867-FFCEBB04166E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E188BBD-90A8-4790-9867-FFCEBB04166E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
