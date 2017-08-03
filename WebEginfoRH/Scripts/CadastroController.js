@@ -133,7 +133,7 @@ app.controller("CadastroController", function ($scope, $http) {
         }
     };
     
-    $scope.perfis1 = [["1", "Sênior"], ["2", "Pleno"], ["3", "Júnior"]];
+    $scope.perfis = [["1", "Sênior"], ["2", "Pleno"], ["3", "Júnior"]];
 
     $scope.$on("fileSelected", function (event, args) {
         $scope.$apply(function () {

@@ -6,17 +6,15 @@
 <div ng-app="candidatosApp" ng-controller="CadastroController">
 
     <form name="userForm" novalidate ng-submit="save()">
-
-        <label for="nome" class="form-control glyphicon-user">
-            Dados do Candidato
-        </label>
         <br />
-
+        <label for="nome"  class="img-tit" style="margin: 5px 0px 32px; padding: 0px; display: block; color: #1C71C7; font-weight:bold; font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-style:normal; font-variant-ligatures: normal;  font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-style: initial; text-decoration-color: initial;">
+       Trabalhe Conosco
+        </label>
         <div class="form-group ">
             <label for="nome" class="control-label  col-sm-2">
                 Nome (*) :
             </label>
-            <input only-letters-input type="text" class="form-control" id="nome" placeholder="Nombre (*)" ng-model="nome" maxlength="80" required />
+            <input only-letters-input type="text" class="form-control" id="nome" placeholder="Nome (*)" ng-model="nome" maxlength="80" required />
         </div>
         <div class="form-group">
             <label for="cpf" class="control-label  col-sm-2">
@@ -87,7 +85,7 @@
                     Perfil:
                 </label>
                 <select class="form-control" id="perfil" ng-model="idPerfil" required>
-                    <option value="">-- Seleccione Perfil --</option>
+                    <option value="">-- Selecione Perfil --</option>
                     <option ng-repeat="item in perfis" value="{{item[0]}}">{{item[1]}}</option>
                 </select>
             </div>
