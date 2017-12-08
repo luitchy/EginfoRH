@@ -1,158 +1,241 @@
-﻿using System;
+﻿using Apitron.PDF.Kit;
+using Apitron.PDF.Kit.Extraction;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using System.Configuration;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Description;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Web;
+using System.Web.Mvc;
 using WebEginfoRH.Models;
 
 namespace WebApiEginfo.Controllers
 {
-    public class CandidatoController : ApiController
+    public class CandidatoController : Controller
     {
+
         private EGINFORHContext db = new EGINFORHContext();
-        
-        [AcceptVerbs("GET", "POST")]
-        public List<Candidato> Buscar(int idPerfil, [FromUri]List<int> especialidade)
+        // GET: Manager
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Cadastro()
+        {
+            return View();
+        }
+
+        public ActionResult Consulta()
+        {
+            return View();
+        }
+
+        public JsonResult Buscar(int idPerfil, IEnumerable<int> especialidade, string cidade)
         {
             EGINFORHContext db = new EGINFORHContext();
-
-            db.Configuration.ProxyCreationEnabled = false;
+            var uploadPath = Server.MapPath("~/Upload/");
             var result = (
              from a in db.Especialidades
              from b in a.Candidatos
-             join c in db.Candidatos on b.id equals c.id
+             join c in db.Candidatos.Include("tb_Endereco") on b.id equals c.id
              where especialidade.Contains(a.id)
-             select new
+             select new DTOGenericObject
              {
-                 id = c.id,
-                 nome = c.nome,
-                 curriculo = c.curriculo,
-                 idPerfil = c.idPerfil
-             }).ToList().Distinct()
-             .Select(x => new Candidato()
-             {
-                 id = x.id,
-                 nome = x.nome,
-                 curriculo = x.curriculo,
-                 idPerfil = x.idPerfil
-             });
+                 ID = c.id,
+                 Nome = c.nome,
+                 Celular = c.celular,
+                 Email = c.email,
+                 CaminhoCurriculo = uploadPath + c.curriculo,
+                 Curriculo = c.curriculo,
+                 EnderecoCidade = c.Endereco.cidade,
+                 IdPerfil = c.idPerfil
+             }
+
+             ).Distinct();
 
             if (idPerfil != 0)
             {
-                result = result.Where(c => c.idPerfil == idPerfil);
+                result = result.Where(c => c.IdPerfil == idPerfil);
             }
-            return result.ToList();
+
+
+            if (!string.IsNullOrEmpty(cidade))
+            {
+                result = result.Where(c => c.EnderecoCidade.Contains(cidade));
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        [ResponseType(typeof(List<Especialidade>))]
-        public List<Especialidade> GetEspecialidades()
+        [HttpGet]
+        public ActionResult Download(string FileName)
         {
-            EGINFORHContext db = new EGINFORHContext();
-            var lista =  db.Especialidades.Select(n => n).ToList();
-            return lista;
-        }
-        // GET: api/Candidato
-        public IQueryable<Candidato> GetCandidatos()
-        {
-            return db.Candidatos;
-        }
+            var downloadPath = Server.MapPath("~/Upload");
+            string filePath = Path.Combine(downloadPath, Path.GetFileName(FileName));
 
-        // GET: api/Candidato/5
-        [ResponseType(typeof(Candidato))]
-        public IHttpActionResult GetCandidato(int id)
-        {
-            Candidato candidato = db.Candidatos.Find(id);
-            if (candidato == null)
-            {
-                return NotFound();
-            }
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
 
-            return Ok(candidato);
+            string extensao = Path.GetExtension(filePath);
+            string contentType = string.Empty;
+            if (extensao.Equals(".pdf"))
+                contentType =  "application/pdf";
+
+            if (extensao.Equals(".docx"))
+                contentType = "application/docx";
+
+            Response.AppendHeader("Content-Disposition", contentType.ToString());
+            return File(fileBytes, contentType);
+
+
         }
 
-        // PUT: api/Candidato/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutCandidato(int id, Candidato candidato)
+        [HttpGet]
+        public FileStreamResult Download1(string FileName)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var downloadPath = Server.MapPath("~/Upload");
+            string filePath = Path.Combine(downloadPath, Path.GetFileName(FileName));
+            string name = Server.MapPath("~/out.html");
+            FileInfo info = new FileInfo(name);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            Stream stream = new MemoryStream(fileBytes);
+            string extensao = Path.GetExtension(filePath);
+            string contentType = string.Empty;
+            if (extensao.Equals(".pdf"))
+                contentType = "application/pdf";
 
-            if (id != candidato.id)
+            if (extensao.Equals(".docx"))
+                contentType = "application/docx";
+            //FileInfo info = new FileInfo("out.html");
+            // string createPath = Path.Combine(downloadPath, "out.html");
+            using (Stream inputStream = System.IO.File.OpenRead(filePath))
             {
-                return BadRequest();
-            }
-
-            db.Entry(candidato).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CandidatoExists(id))
+                FixedDocument doc;
+                using (doc = new FixedDocument(inputStream))
                 {
-                    return NotFound();
+                    // create output file
+                    using (TextWriter writer = info.CreateText())
+                    {
+                        // write returned html string to file
+                        writer.Write(doc.Pages[0].ConvertToHtml(TextExtractionOptions.HtmlPage));
+
+                    }
                 }
-                else
+            }
+            Response.AppendHeader("Content-Disposition", contentType.ToString());
+
+
+            return new FileStreamResult(stream, "application/pdf");
+        }
+
+
+        [HttpPost]
+        public void FileUpload()
+        {
+            HttpPostedFileBase arquivo = Request.Files[0];
+            int id = Convert.ToInt32(Request.Form[0]);
+            Candidato candidato = new Candidato();
+            string nome = Request.Form[1].ToString();
+            string celular = Request.Form[2].ToString();
+            string email = Request.Form[3].ToString();
+            int idPerfil = Convert.ToInt32(Request.Form[4]);
+            candidato.nome = nome;
+            candidato.celular = celular;
+            candidato.email = email;
+            candidato.idPerfil = idPerfil;
+            List<string> lista = new List<string>();
+            lista.Add(".PDF");
+            lista.Add(".DOC");
+            lista.Add(".DOCX");
+
+            var match = lista.FirstOrDefault(stringToCheck => stringToCheck.Contains(Path.GetExtension(arquivo.FileName).ToUpper()));
+            var especialidade = Request.Form[5].Split(',').Select(s => Int32.Parse(s));
+            if ((arquivo.ContentLength < 4096 * 1024) && (match != null))
+            {
+                string nomeArquivoGuid = Guid.NewGuid() + "." + Path.GetExtension(arquivo.FileName);
+
+                var uploadPath = Server.MapPath("~/Upload");
+                string caminhoArquivo = Path.Combine(@uploadPath, Path.GetFileName(nomeArquivoGuid));
+                arquivo.SaveAs(caminhoArquivo);
+                var candidatoUpdate = db.Candidatos.Find(id);
+                if (candidatoUpdate != null)
                 {
-                    throw;
+                    candidatoUpdate.curriculo = nomeArquivoGuid;
+                    db.Candidatos.Attach(candidatoUpdate);
+                    var entry = db.Entry(candidatoUpdate);
+                    entry.Property(e => e.curriculo).IsModified = true;
+                    db.SaveChanges();
+                    var getValue = ConfigurationManager.AppSettings["emailVaga"];
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(getValue);
+                    mail.From = new MailAddress("rhvagas@eginfo.com.br");
+                    mail.Subject = "EGinfo -Cadastro de Candidato - Curriculo";
+                    string Body = createEmailBody(candidato, especialidade);
+                    mail.Body = Body;
+                    mail.IsBodyHtml = true;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "email-ssl.com.br";
+                    smtp.Port = 587;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new System.Net.NetworkCredential
+                    ("rhvagas@eginfo.com.br", "eginfo01");
+                    Attachment attachment = new Attachment(caminhoArquivo, MediaTypeNames.Application.Octet);
+                    ContentDisposition disposition = attachment.ContentDisposition;
+                    disposition.FileName = Path.GetFileName(caminhoArquivo);
+                    disposition.Size = new FileInfo(caminhoArquivo).Length;
+                    disposition.DispositionType = DispositionTypeNames.Attachment;
+                    mail.Attachments.Add(attachment);
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                    smtp.Dispose();
                 }
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            else
+            {
+                throw new Exception("Arquivo inválido");
+            }
         }
 
-        // POST: api/Candidato
-        [ResponseType(typeof(Candidato))]
-        public IHttpActionResult PostCandidato(Candidato candidato)
+        private string createEmailBody(Candidato candidato, IEnumerable<int> especialidade)
         {
-            if (!ModelState.IsValid)
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(Server.MapPath("~/Views/Template/HtmlTemplate.html")))
             {
-                return BadRequest(ModelState);
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("{candidato}", candidato.nome);
+            body = body.Replace("{telefone}", candidato.celular);
+            body = body.Replace("{email}", candidato.email);
+            body = body.Replace("{perfil}", ObterPerfil(candidato.idPerfil));
+
+            var lista = (from d in db.Especialidades.ToList()
+                         join e in especialidade on d.id equals e
+                         select d.nome).ToList();
+
+            string result = String.Join(", ", lista);
+            body = body.Replace("{especialidades}", result.ToString());
+            return body;
+        }
+
+        [HttpGet]
+        public string ObterPerfil(int? id)
+        {
+            string nome = string.Empty;
+            switch (id)
+            {
+                case 1:
+                    nome = "Sênior";
+                    break;
+                case 2:
+                    nome = "Pleno";
+                    break;
+                default:
+                    nome = "Júnior";
+                    break;
             }
 
-            db.Candidatos.Add(candidato);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = candidato.id }, candidato);
-        }
-
-        // DELETE: api/Candidato/5
-        [ResponseType(typeof(Candidato))]
-        public IHttpActionResult DeleteCandidato(int id)
-        {
-            Candidato candidato = db.Candidatos.Find(id);
-            if (candidato == null)
-            {
-                return NotFound();
-            }
-
-            db.Candidatos.Remove(candidato);
-            db.SaveChanges();
-
-            return Ok(candidato);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool CandidatoExists(int id)
-        {
-            return db.Candidatos.Count(e => e.id == id) > 0;
+            return nome;
         }
     }
 }
